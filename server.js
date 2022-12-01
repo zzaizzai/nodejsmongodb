@@ -1,17 +1,31 @@
 const express = require('express');
 const app = express();
+const path = require('path')
+
 const { ObjectID } = require('bson');
 const bodyParser = require('body-parser');
 require('dotenv').config()
+const PORT = process.env.PORT || 5000
 // var config = require('./config')
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.set('view engine', 'ejs')
-app.use('/public', express.static('public'))
+// app.set('view engine', 'ejs')
+// app.use('/public', express.static('public'))
+
+
+
+express()
+  .use(express.static(path.join(__dirname, 'public')))
+  .set('views', path.join(__dirname, 'views'))
+  .set('view engine', 'ejs')
+  .get('/', (req, res) => res.render('index.ejs'))
+  .listen(PORT, () => console.log(`Listening on ${ PORT }`))
 
 var db
 const MongoClient = require('mongodb').MongoClient
 const mongoDbUrl = `mongodb+srv://${process.env.MONGODB_ID}:${process.env.MONGODB_PASSWORD}@cluster0.akash.mongodb.net/?retryWrites=true&w=majority`
+
+
 
 MongoClient.connect(mongoDbUrl, function (err, client) {
     if (err) return console.log(err)
@@ -133,6 +147,6 @@ passport.deserializeUser(function (user_id_saved, done) {
 
 
 
-app.listen(8080, function () {
-    console.log('listening on 8080')
-})
+// app.listen(PORT, function () {
+//     console.log('listening on 8080')
+// })
