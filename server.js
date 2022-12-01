@@ -3,6 +3,7 @@ const app = express();
 const { ObjectID } = require('bson');
 const bodyParser = require('body-parser');
 require('dotenv').config()
+// var config = require('./config')
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs')
@@ -16,6 +17,7 @@ MongoClient.connect(mongoDbUrl, function (err, client) {
     if (err) return console.log(err)
     db = client.db('nodejs-work-request')
     app.db = db
+    console.log('connected')
 })
 
 
@@ -66,6 +68,70 @@ app.get('/', function(req, res) {
 //         res.send('delete done')
 //     })
 // })
+
+
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const session = require('express-session');
+
+app.use(session({ secret: '1234', resave: true, saveUninitialized: false }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+
+app.get('/login', (req, res)=> {
+    res.render('login.ejs')
+})
+app.post('/login/login', passport.authenticate('local', { failureRedirect: '/fail' }), function (req, res) {
+    res.redirect('/')
+});
+
+
+
+function is_login(req, res, next) {
+    if (req.user) {
+        next()
+    } else {
+        res.render('login.ejs')
+    }
+}
+
+passport.use(new LocalStrategy({
+    usernameField: 'id',
+    passwordField: 'pw',
+    session: true,
+    passReqToCallback: false,
+}, function (input_id, input_pw, done) {
+    console.log(input_id, input_pw);
+    db.collection('accounts').findOne({ 'id': input_id }, (err, result) => {
+        console.log(result)
+
+        login_data = result
+        if (err) return done(err)
+        if (!login_data) return done(null, false, { message: 'account does not exist' })
+        if (input_pw == login_data.pw) {
+            return done(null, login_data)
+        } else {
+            return done(null, false, { message: 'wrong password' })
+        }
+    })
+}));
+
+passport.serializeUser(function (user, done) {
+    done(null, user.id)
+});
+
+passport.deserializeUser(function (user_id_saved, done) {
+    //user information from DB
+
+    db.collection('accounts').findOne({ 'id': user_id_saved }, (err, result) => {
+        console.log(result)
+        done(null, result)
+    })
+});
+
+
 
 app.listen(8080, function () {
     console.log('listening on 8080')
