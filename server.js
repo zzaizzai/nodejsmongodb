@@ -22,8 +22,13 @@ MongoClient.connect(mongoDbUrl, function (err, client) {
 
 
 // app.use('/', require('./routes/works.js'))
-// app.use('/', require('./routes/login.js'))
-app.use('/', require('./routes/users.js'))
+app.use('/login', require('./routes/login.js'))
+app.use('/users', require('./routes/users.js'))
+
+
+app.get('/', function(req, res) {
+    res.render('index.ejs')
+})
 
 // app.get('/users', function (req, res) {
 //     db.collection('users').find().toArray((err, result) => {
