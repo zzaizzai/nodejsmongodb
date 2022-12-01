@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 
-express()
+app
   .use(express.static(path.join(__dirname, 'public')))
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
@@ -42,8 +42,12 @@ app.use('/login', require('./routes/login.js'))
 app.use('/users', require('./routes/users.js'))
 
 
-app.get('/', function(req, res) {
-    res.render('index.ejs')
+// app.get('/', function(req, res) {
+//     res.render('index.ejs')
+// })
+
+app.get('/test', function(req, res) {
+    res.send('dddd')
 })
 
 // app.get('/users', function (req, res) {
