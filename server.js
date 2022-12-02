@@ -1,52 +1,46 @@
 const express = require('express');
 const app = express();
 const path = require('path')
-
 const { ObjectID } = require('bson');
 const bodyParser = require('body-parser');
 require('dotenv').config()
 const PORT = process.env.PORT || 5000
-// var config = require('./config')
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.set('view engine', 'ejs')
-// app.use('/public', express.static('public'))
-
-
 
 app
-  .use(express.static(path.join(__dirname, 'public')))
-  .set('views', path.join(__dirname, 'views'))
-  .set('view engine', 'ejs')
-  .get('/', (req, res) => res.render('index.ejs'))
-  .listen(PORT, () => console.log(`Listening on ${ PORT }`))
+    .use(express.static(path.join(__dirname, 'public')))
+    .set('views', path.join(__dirname, 'views'))
+    .set('view engine', 'ejs')
+    .get('/', (req, res) => res.render('index.ejs'))
+    .listen(PORT, () => console.log(`Listening on ${PORT}`))
 
 var db
 const MongoClient = require('mongodb').MongoClient
 const mongoDbUrl = `mongodb+srv://${process.env.MONGODB_ID}:${process.env.MONGODB_PASSWORD}@cluster0.akash.mongodb.net/?retryWrites=true&w=majority`
 
 
+module.exports.connect = function connect(callback){
+    MongoClient.connect(mongoDbUrl, function (err, client) {
+        if (err) return console.log(err)
+        db = client.db('nodejs-work-request')
+        app.db = db
+        module.exports.db = db
+        console.log('connected')
+        callback(err)
+    })
+}
 
-MongoClient.connect(mongoDbUrl, function (err, client) {
-    if (err) return console.log(err)
-    db = client.db('nodejs-work-request')
-    app.db = db
-    console.log('connected')
+const mongo = require('./server.js')
+mongo.connect(function(err){
+    if (err) throw err
 })
 
 
-
-
-// app.use('/', require('./routes/works.js'))
 app.use('/login', require('./routes/login.js'))
 app.use('/users', require('./routes/users.js'))
 
-
-// app.get('/', function(req, res) {
-//     res.render('index.ejs')
-// })
-
-app.get('/test', function(req, res) {
+app.get('/test', function (req, res) {
     res.send('dddd')
 })
 
@@ -91,6 +85,8 @@ app.get('/test', function(req, res) {
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
+const { callbackify } = require('util');
+const { connect } = require('http2');
 
 app.use(session({ secret: '1234', resave: true, saveUninitialized: false }));
 app.use(passport.initialize());
@@ -98,7 +94,7 @@ app.use(passport.session());
 
 
 
-app.get('/login', (req, res)=> {
+app.get('/login', (req, res) => {
     res.render('login.ejs')
 })
 app.post('/login/login', passport.authenticate('local', { failureRedirect: '/fail' }), function (req, res) {
@@ -122,7 +118,7 @@ passport.use(new LocalStrategy({
     passReqToCallback: false,
 }, function (input_id, input_pw, done) {
     console.log(input_id, input_pw);
-    db.collection('accounts').findOne({ 'id': input_id }, (err, result) => {
+    db.collection('users').findOne({ 'id': input_id }, (err, result) => {
         console.log(result)
 
         login_data = result
@@ -143,7 +139,7 @@ passport.serializeUser(function (user, done) {
 passport.deserializeUser(function (user_id_saved, done) {
     //user information from DB
 
-    db.collection('accounts').findOne({ 'id': user_id_saved }, (err, result) => {
+    db.collection('users').findOne({ 'id': user_id_saved }, (err, result) => {
         console.log(result)
         done(null, result)
     })

@@ -1,12 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+      crossorigin="anonymous"
+    />
     <title>Document</title>
-</head>
-<body>
-    <div>dd</div>
-</body>
+  </head>
+  <body>
+    <%- include('navbar.html') %>
+    <div class="container mt-4">
+      <!-- <form action="/users/signup" method="POST"> -->
+      <div class="form-group">
+        <label>name</label>
+        <input type="text" class="form-control" name="username" />
+      </div>
+      <div class="form-group">
+        <label>id</label>
+        <input type="text" class="form-control" name="id" />
+      </div>
+      <div class="form-group">
+        <label>pw</label>
+        <input type="text" class="form-control" name="pw" />
+      </div>
+      <button type="submit" class="btn btn-danger" id="signup">Sigh Up</button>
+      <!-- </form> -->
+    </div>
+  </body>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script>
+    $("#signup").click(function () {
+      data = {
+        user_name: $('input[name="username"]').val(),
+        id: $('input[name="id"]').val(),
+        pw: $('input[name="pw"]').val(),
+      };
+      $.ajax({
+        method: "POST",
+        url: '/users/signup',
+        data: data
+      }).done((result)=> {
+        console.log(result)
+      })
+      console.log(data);
+    });
+  </script>
 </html>
