@@ -13,7 +13,7 @@
     <title>Document</title>
   </head>
   <body>
-    <%- include('./components/navbar.html') %>
+    <%- include('./../components/navbar.html') %>
     <div class="container mx-2">
       <button
         class="btn btn-outline-primary"
@@ -22,16 +22,8 @@
         Add
       </button>
       <div class="container mx-2">
-        <h4>Users</h4>
+        <h4>Users detail</h4>
         <ul class="list-group list-group-flush">
-          <% for (var i =0; i < users.length; i++){ %>
-          <li class="list-group-item">
-            <div>uid: <%= users[i]._id %></div>
-            <div>id: <%= users[i].id %></div>
-            <div>name: <%= users[i].user_name %></div>
-            <div>department: <%= users[i].department ?? 'None' %></div>
-          </li>
-          <% } %>
         </ul>
       </div>
     </div>

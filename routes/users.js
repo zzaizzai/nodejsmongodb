@@ -11,6 +11,18 @@ module.exports = function (app) {
         })
     })
 
+    route.get('/:id', (req, res) => {
+        user_id = req.params.id
+        // app.db.collection('users').find().toArray((err, result) => {
+        //     console.log(result)
+        //     res.render('users.ejs', { users: result })
+        // })
+        app.db.collection('users').findOne({id: user_id}, (err, result)=> {
+            console.log(result)
+            res.render('./users/users_detail.ejs')
+        })
+    })
+
     route.get('/add', (req, res) => {
         res.render('users_add.ejs')
     })
