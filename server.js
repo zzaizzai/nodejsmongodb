@@ -40,8 +40,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-
-
 app.post('/login/login', passport.authenticate('local', {
     failureRedirect: '/login',
     failureFlash: 'Error'
@@ -66,7 +64,7 @@ passport.use(new LocalStrategy({
     session: true,
     passReqToCallback: false,
 }, function (input_id, input_pw, done) {
-    console.log(input_id, input_pw);
+    // console.log(input_id, input_pw);
     db.collection('users').findOne({ 'id': input_id }, (err, result) => {
         // console.log(result)
 
@@ -87,7 +85,7 @@ passport.serializeUser(function (user, done) {
 
 passport.deserializeUser(function (user_id_saved, done) {
     //user information from DB
-    console.log(user_id_saved)
+    // console.log(user_id_saved)
     db.collection('users').findOne({ 'id': user_id_saved }, (err, result) => {
         console.log(result)
         done(null, result)
@@ -100,7 +98,7 @@ passport.deserializeUser(function (user_id_saved, done) {
 app.use('/login', require('./routes/login.js')(app))
 app.use('/mypage', require('./routes/mypage.js')(app))
 app.use('/users', require('./routes/users.js')(app))
-app.use('/works', require('./routes/works.js'))
+app.use('/works', require('./routes/works.js')(app))
 
 app.get('/test', function (req, res) {
     res.send('dddd')

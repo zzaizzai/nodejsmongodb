@@ -2,30 +2,27 @@ module.exports = function (app) {
 
     var route = require('express').Router();
     const { ObjectID } = require('bson');
-
-
+    const Service = require('./Service')
     route.get('/', (req, res) => {
         app.db.collection('users').find().toArray((err, result) => {
-            console.log(result)
             res.render('users.ejs', { users: result })
         })
     })
 
+    route.get('/mode/add', (req, res) => {
+        res.render('users_add.ejs')
+    })
+
     route.get('/:id', (req, res) => {
         user_id = req.params.id
-        // app.db.collection('users').find().toArray((err, result) => {
-        //     console.log(result)
-        //     res.render('users.ejs', { users: result })
-        // })
-        app.db.collection('users').findOne({id: user_id}, (err, result)=> {
-            console.log(result)
+
+
+        app.db.collection('users').findOne({ id: user_id }, (err, result) => {
             res.render('./users/users_detail.ejs')
         })
     })
 
-    route.get('/add', (req, res) => {
-        res.render('users_add.ejs')
-    })
+
 
     route.post('/signup', (req, res) => {
         console.log(req.body)
@@ -35,6 +32,7 @@ module.exports = function (app) {
             pw: req.body.pw,
             role: "general",
             department: null,
+            create_datetime: Service.datetime_now(),
         }
         req.app.db.collection('users').insertOne(insert_data, (err, result) => {
             if (err) {

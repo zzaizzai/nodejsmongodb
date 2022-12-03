@@ -13,7 +13,23 @@
     <title>Document</title>
   </head>
   <body>
-    <%- include('./components/navbar.html') %>
+    <%- include('./../components/navbar.html') %>
     <h4>works</h4>
+    <button
+    class="btn btn-outline-primary"
+    onclick="location.href ='/works/mode/add'"
+  >
+    Add
+  </button>
+    <% for (var i =0; i < works.length; i++){ %>
+      <li class="list-group-item">
+        <div>uid: <%= works[i]._id %></div>
+        <div>user_id: <%= works[i].user_id %></div>
+        <div>due_date: <%= works[i].due_date %></div>
+        <div>create_datetime: <%= works[i].create_datetime %></div>
+        
+      </li>
+      <% } %>
+    </ul>
   </body>
 </html>
