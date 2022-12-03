@@ -13,17 +13,26 @@
     <title>Document</title>
   </head>
   <body>
-    <%- include('navbar.html') %>
-    <button class="btn " onclick="location.href ='/users/add'">Add</button>
+    <%- include('./components/navbar.html') %>
     <div class="container mx-2">
-      <h4>Users</h4>
-      <div>users</div>
-      <% for (var i =0; i < users.length; i++){ %>
-      <div><%= users[i]._id %></div>
-      <div><%= users[i].user_name %></div>
-      <div><%= users[i].age %></div>
-      <% } %>
-      <div>users</div>
+      <button
+        class="btn btn-outline-primary"
+        onclick="location.href ='/users/add'"
+      >
+        Add
+      </button>
+      <div class="container mx-2">
+        <h4>Users</h4>
+        <ul class="list-group list-group-flush">
+          <% for (var i =0; i < users.length; i++){ %>
+          <li class="list-group-item">
+            <div><%= users[i]._id %></div>
+            <div><%= users[i].user_name %></div>
+            <div><%= users[i].age %></div>
+          </li>
+          <% } %>
+        </ul>
+      </div>
     </div>
   </body>
 </html>

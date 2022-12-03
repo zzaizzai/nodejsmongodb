@@ -1,6 +1,7 @@
-var router = require('express').Router();
-const db = require('./../server.js')
+var works = require('express').Router();
 
+works.get('/', function(req, res){
+    res.render('works.ejs')
+})
 
-
-module.exports = router;
+module.exports = works;
