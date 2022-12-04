@@ -12,6 +12,15 @@ module.exports = function (app) {
         res.render('login.ejs', { message: message })
     })
 
+    route.get('/logout', (req, res, next) => {
+        console.log('logged out')
+        req.logout((err) => {
+            if (err) { return next(err); }
+            res.status(200).send({ message: "success" })
+        });
+
+    })
+
     route.get('/test', (req, res) => {
 
         app.db.collection('users').find().toArray((err, result) => {

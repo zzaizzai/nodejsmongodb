@@ -13,7 +13,7 @@
     <title>Document</title>
   </head>
   <body>
-    <%- include('./../components/navbar.html') %>
+    <%- include('./../components/navbar.ejs') %>
     <div class="container">
       <h3>Mypage</h3>
       
@@ -43,6 +43,19 @@
         <% } %>
       </table>
       <button onclick="location.href='/mypage/mode/edit'">Edit</button>
+      <button id="logout">logout</button>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+      $('#logout').click(function(){
+        $.ajax({
+          method: "GET",
+          url: "/login/logout",
+        }).done((result)=> {
+          location.href = '/'
+        })
+      })
+    </script>
   </body>
 </html>

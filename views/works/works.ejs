@@ -13,24 +13,32 @@
     <title>Document</title>
   </head>
   <body>
-    <%- include('./../components/navbar.html') %>
+    <%- include('./../components/navbar.ejs') %>
     <h4>works</h4>
     <button
-    class="btn btn-outline-primary"
-    onclick="location.href ='/works/mode/add'"
-  >
-    Add
-  </button>
+      class="btn btn-outline-primary"
+      onclick="location.href ='/works/mode/add'"
+    >
+      Add
+    </button>
+
     <% for (var i =0; i < works.length; i++){ %>
-      <li class="list-group-item">
-        <div>uid: <%= works[i]._id %></div>
-        <div>title: <%= works[i].title %></div>
-        <div>name: <%= works[i].unserInfo.user_name %></div>
-        <div>due_date: <%= works[i].due_date %></div>
-        <div>create_datetime: <%= works[i].create_datetime %></div>
-        
-      </li>
-      <% } %>
-    </ul>
+    <li class="list-group-item">
+      <div>uid: <%= works[i]._id %></div>
+      <div>title: <%= works[i].title %></div>
+      <div>name: <%= works[i].unserInfo.user_name %></div>
+      <div>due_date: <%= works[i].due_date %></div>
+      <div>create_datetime: <%= works[i].create_datetime %></div>
+      <button data-id="<%= works[i]._id %>" class="more">More</button>
+    </li>
+
+    <% } %>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+      $(".more").click(function () {
+        location.href = `/works/${this.dataset.id}`;
+      });
+    </script>
   </body>
 </html>

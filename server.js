@@ -70,7 +70,7 @@ passport.use(new LocalStrategy({
     session: true,
     passReqToCallback: false,
 }, function (input_id, input_pw, done) {
-    // console.log(input_id, input_pw);
+    console.log(input_id, input_pw);
     db.collection('users').findOne({ 'id': input_id }, (err, result) => {
         // console.log(result)
 
@@ -97,6 +97,7 @@ passport.deserializeUser(function (user_id_saved, done) {
         done(null, result)
     })
 });
+
 
 
 

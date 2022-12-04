@@ -10,19 +10,25 @@ module.exports = function (app) {
     })
 
     route.get('/mode/add', (req, res) => {
-        
+
         res.render('users_add.ejs')
     })
 
     route.get('/:id', (req, res) => {
         user_id = req.params.id
-
-
         app.db.collection('users').findOne({ id: user_id }, (err, result) => {
             res.render('./users/users_detail.ejs')
         })
     })
 
+    route.get('/data/:id', (req, res) => {
+        user_id = req.params.id
+        console.log(user_id)
+        app.db.collection('users').findOne({ id: user_id }, (err, result) => {
+            delete result.pw
+            res.send({ user: result })
+        })
+    })
 
 
     route.post('/signup', (req, res) => {
