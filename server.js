@@ -14,8 +14,11 @@ app
     .use(express.static(path.join(__dirname, 'public')))
     .set('views', path.join(__dirname, 'views'))
     .set('view engine', 'ejs')
-    .get('/', (req, res) => res.render('index.ejs'))
-    .listen(PORT, () => console.log(`Listening on ${PORT}`))
+
+
+
+
+app.listen(PORT, () => console.log(`Listening on ${PORT}`))
 
 var db
 const MongoClient = require('mongodb').MongoClient
@@ -56,7 +59,10 @@ function is_login(req, res, next) {
     }
 }
 
-
+app.get('/', (req, res) => {
+    console.log(req.user)
+    res.render('index.ejs', { user: req.user })
+})
 
 passport.use(new LocalStrategy({
     usernameField: 'id',

@@ -24,7 +24,8 @@
     <% for (var i =0; i < works.length; i++){ %>
       <li class="list-group-item">
         <div>uid: <%= works[i]._id %></div>
-        <div>user_id: <%= works[i].user_id %></div>
+        <div>title: <%= works[i].title %></div>
+        <div>name: <%= works[i].unserInfo.user_name %></div>
         <div>due_date: <%= works[i].due_date %></div>
         <div>create_datetime: <%= works[i].create_datetime %></div>
         

@@ -5,17 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
-    integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
-    crossorigin="anonymous"
-  />
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+      crossorigin="anonymous"
+    />
     <title>Document</title>
   </head>
   <body>
-    <%- include('./components/navbar.html') %>
-    <div>
+    <%- include('./../components/navbar.html') %>
+    <div class="container">
       <h3>Mypage</h3>
+      
       <table>
         <% if (user){ %>
         <tr>
@@ -23,9 +24,9 @@
           <td><%= user._id %></td>
         </tr>
         <tr>
-            <td>id:</td>
-            <td><%= user.id %></td>
-          </tr>
+          <td>id:</td>
+          <td><%= user.id %></td>
+        </tr>
         <tr>
           <td>Name:</td>
           <td><%= user.user_name %></td>
@@ -35,12 +36,13 @@
           <td><%= user.role %></td>
         </tr>
         <tr>
-            <td>Department:</td>
-            <td><%= user.department %></td>
-          </tr>
+          <td>Department:</td>
+          <td><%= user.department %></td>
+        </tr>
 
         <% } %>
       </table>
+      <button onclick="location.href='/mypage/mode/edit'">Edit</button>
     </div>
   </body>
 </html>

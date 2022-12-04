@@ -11,7 +11,12 @@ module.exports = function (app) {
 
     route.get('/', is_login, (req, res) => {
         
-        res.render('mypage.ejs', {user : req.user})
+        res.render('./mypage/mypage.ejs', {user : req.user})
+    })
+
+    route.get('/mode/edit', is_login, (req, res) => {
+        console.log('editmode')
+        res.render('./mypage/mypage_edit.ejs', {user : req.user})
     })
     return route
 }

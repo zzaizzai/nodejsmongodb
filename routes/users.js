@@ -10,6 +10,7 @@ module.exports = function (app) {
     })
 
     route.get('/mode/add', (req, res) => {
+        
         res.render('users_add.ejs')
     })
 
