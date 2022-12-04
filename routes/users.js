@@ -5,13 +5,13 @@ module.exports = function (app) {
     const Service = require('./Service')
     route.get('/', (req, res) => {
         app.db.collection('users').find().toArray((err, result) => {
-            res.render('users.ejs', { users: result })
+            res.render('./users/users.ejs', { users: result })
         })
     })
 
     route.get('/mode/add', (req, res) => {
 
-        res.render('users_add.ejs')
+        res.render('./users/users_add.ejs')
     })
 
     route.get('/:id', (req, res) => {
@@ -32,12 +32,13 @@ module.exports = function (app) {
 
     route.post('/signup', (req, res) => {
         console.log(req.body)
+        const data = req.body
         var insert_data = {
-            user_name: req.body.user_name,
-            id: req.body.id,
-            pw: req.body.pw,
+            user_name: data.user_name,
+            id: data.id,
+            pw: data.pw,
             role: "general",
-            department: null,
+            department: data.department,
             create_datetime: Service.datetime_now(),
         }
         req.app.db.collection('users').insertOne(insert_data, (err, result) => {

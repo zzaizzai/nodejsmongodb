@@ -14,9 +14,9 @@
   </head>
   <body>
     <%- include('./../components/navbar.ejs') %>
-    <div class="container mx-2">
+    <div class="container mx-auto">
       <div class="d-flex">
-        <h4 class="flex-grow-1">works</h4>
+        <h4 class="flex-grow-1">Works</h4>
         <div class="mx-2">
           <!-- <select name="">
             <option value="">Sort</option>
@@ -48,10 +48,12 @@
           <li class="list-group-item">
             <div>uid: <%= works[i]._id %></div>
             <div>title: <%= works[i].title %></div>
-            <!-- <div>name: <%= works[i].unserInfo.user_name %></div> -->
+            <div>name: <%= works[i].unserInfo.user_name %></div>
             <div>due_date: <%= works[i].due_date %></div>
-            <div>create_datetime: <%= works[i].create_datetime %></div>
-            <button data-id="<%= works[i]._id %>" class="more">More</button>
+            <div class="d-flex">
+              <div class="flex-grow-1">create_datetime: <%= works[i].create_datetime %></div>
+              <button data-id="<%= works[i]._id %>" class="more btn btn-secondary">More</button>
+            </div>
           </li>
           <% } %>
         </ul>

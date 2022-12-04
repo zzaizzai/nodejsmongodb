@@ -14,15 +14,17 @@
   </head>
   <body>
     <%- include('./../components/navbar.ejs') %>
-    <div class="container mx-2">
-      <button
-        class="btn btn-outline-primary"
-        onclick="location.href ='/users/mode/add'"
-      >
-        Add
-      </button>
-      <div class="container mx-2">
-        <h4>Users</h4>
+    <div class="container mx-auto">
+      <div class="d-flex">
+        <h4 class="flex-grow-1">Users</h4>
+        <button
+          class="btn btn-outline-primary"
+          onclick="location.href ='/users/mode/add'"
+        >
+          Add
+        </button>
+      </div>
+      <div >
         <ul class="list-group list-group-flush">
           <% for (var i =0; i < users.length; i++){ %>
           <li class="list-group-item">

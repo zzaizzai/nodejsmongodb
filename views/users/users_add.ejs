@@ -13,7 +13,7 @@
     <title>Document</title>
   </head>
   <body>
-    <%- include('./components/navbar.ejs') %>
+    <%- include('./../components/navbar.ejs') %>
     <div class="container mt-4">
       <!-- <form action="/users/signup" method="POST"> -->
       <div class="form-group">
@@ -28,6 +28,15 @@
         <label>pw</label>
         <input type="text" class="form-control" name="pw" />
       </div>
+      <div class="form-group">
+        <label>department</label>
+        <select class="form-control" name="" id="department">
+          <option value="">select department</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+        </select>
+      </div>
       <button type="submit" class="btn btn-danger" id="signup">Sigh Up</button>
       <!-- </form> -->
     </div>
@@ -39,6 +48,7 @@
         user_name: $('input[name="username"]').val(),
         id: $('input[name="id"]').val(),
         pw: $('input[name="pw"]').val(),
+        department: $('#department').val(),
       };
       $.ajax({
         method: "POST",
