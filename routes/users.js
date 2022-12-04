@@ -22,8 +22,7 @@ module.exports = function (app) {
     })
 
     route.get('/data/:id', (req, res) => {
-        user_id = req.params.id
-        console.log(user_id)
+        const user_id = req.params.id
         app.db.collection('users').findOne({ id: user_id }, (err, result) => {
             delete result.pw
             res.send({ user: result })

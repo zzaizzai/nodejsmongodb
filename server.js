@@ -55,9 +55,10 @@ function is_login(req, res, next) {
     if (req.user) {
         next()
     } else {
-        res.render('login.ejs')
+        res.render('login.ejs', {message: "please login"})
     }
 }
+module.exports = {is_login}
 
 app.get('/', (req, res) => {
     console.log(req.user)

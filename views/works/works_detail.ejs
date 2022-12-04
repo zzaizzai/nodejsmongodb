@@ -17,10 +17,17 @@
     <div class="container mx-2">
       <h4>Detail</h4>
       <div>Ttile: <span id="title"><%= work.title %></span></div>
-      <div><span id="due"><%= work.due_date %></span></div>
-      <div><span id="user-id"><%= work.user_id %></span></div>
-      <div><span id="user-name"></span></div>
+      <div>Due Date: <span id="due"><%= work.due_date %></span></div>
+      <div>
+        Create datetime: <span id="due"><%= work.create_datetime %></span>
+      </div>
+      <div>user id: <span id="user-id"><%= work.user_id %></span></div>
+      <div>text: <span id="user-id"><%= work.work_text %></span></div>
+      <div>user name: <span id="user-name"></span></div>
       <div>Department: <span id="user-department"></span></div>
+      <button onclick="location.href ='/works/<%= work._id %>/edit'">
+        Edit
+      </button>
     </div>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 

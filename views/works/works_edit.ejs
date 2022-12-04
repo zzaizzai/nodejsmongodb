@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+      crossorigin="anonymous"
+    />
+    <title>Document</title>
+  </head>
+  <body>
+    <%- include('./../components/navbar.ejs') %>
+    <div><% if ( work ) { %></div>
+    <div class="container mt-4">
+      <!-- <form action="/users/signup" method="POST"> -->
+      <div id="work-uid"><%= work._id %></div>
+      <div>Create Time: <%= work.create_datetime %></div>
+      <div class="d-flex">
+        <div class="mr-2" id="user-name"></div>
+        <div class="d-flex">
+          (
+          <div class="mx-2" id="user-id"><%=work.user_id %></div>
+          )
+        </div>
+      </div>
+      <div class="d-flex">
+        <div>Department:</div>
+        <div class="mr-2" id="user-department"></div>
+      </div>
+      <div class="form-group">
+        <label>title</label>
+        <input
+          type="text"
+          class="form-control"
+          name="title"
+          value="<%= work.title %>"
+          id="title"
+        />
+      </div>
+      <div class="form-group">
+        <label>Due date</label>
+        <input
+          type="date"
+          class="form-control"
+          name="due"
+          value="<%= work.due_date %>"
+          id="work-due"
+        />
+      </div>
+      <div class="form-group">
+        <label>Explain</label>
+        <textarea type="text" class="form-control" name="due" id="work-text">
+<%= work.work_text %></textarea
+        >
+      </div>
+      <button type="submit" class="btn btn-primary mr-2" id="edit">Edit</button>
+      <button
+        type="submit"
+        class="btn btn-outline-danger"
+        id="cancle"
+        onclick="history.back()"
+      >
+        cancle
+      </button>
+      <!-- </form> -->
+    </div>
+    <div><% } %></div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+      $.ajax({
+        method: "get",
+        url: `/users/data/${$("#user-id").html()}`,
+      }).done((result) => {
+        console.log(result);
+        user = result.user;
+        $("#user-name").text(user.user_name);
+        $("#user-department").text(user.department);
+      });
+    </script>
+
+    <script>
+      $("#edit").click(function () {
+        console.log("edit");
+        $.ajax({
+          method: "post",
+          url: "/works/edit",
+          data: {
+            work_uid: $("#work-uid").html(),
+            title: $("#title").val(),
+            work_text: $("#work-text").val(),
+            due_date: $("#work-due").val(),
+          },
+        }).done(function (result) {
+          console.log(result);
+          window.location = document.referrer;
+        });
+      });
+    </script>
+  </body>
+</html>

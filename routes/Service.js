@@ -9,4 +9,13 @@ function datetime_now() {
 }
 
 
-module.exports = { datetime_now }
+function is_login(req, res, next) {
+    if (req.user) {
+        next()
+    } else {
+        res.render('login.ejs', {message: "please login"})
+    }
+}
+
+
+module.exports = { datetime_now, is_login }
