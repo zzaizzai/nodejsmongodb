@@ -4,29 +4,6 @@ module.exports = function (app) {
     var router = require('express').Router();
     const Service = require('./Service')
 
-    // router.get('/', function (req, res) {
-    //     const search = req.query.search
-    //     if (search != undefined) {
-    //         console.log(search)
-    //     }
-
-    //     app.db.collection("works").aggregate([
-
-    //         {
-    //             $lookup: {
-    //                 from: "users",
-    //                 localField: "user_id",
-    //                 foreignField: "id",
-    //                 as: "unserInfo"
-    //             },
-    //         },
-    //         { $unwind: "$unserInfo" },
-    //     ]).toArray((err, result) => {
-    //         // console.log(result)
-    //         res.render('./works/works.ejs', { works: result })
-    //     })
-    // })
-
     router.get('/', function (req, res) {
         var search = req.query.search
         if (search != undefined) {

@@ -16,7 +16,7 @@
     <%- include('./../components/navbar.ejs') %>
     <div class="container mx-auto">
       <div class="d-flex">
-        <h4 class="flex-grow-1">Works</h4>
+        <h4 class="flex-grow-1">Requests</h4>
         <div class="mx-2">
           <!-- <select name="">
             <option value="">Sort</option>
@@ -26,9 +26,9 @@
         </div>
         <button
           class="btn btn-outline-primary"
-          onclick="location.href ='/works/mode/add'"
+          onclick="location.href ='/requests/mode/add'"
         >
-          Add New Wrok
+          Add New Request
         </button>
       </div>
       <div class="d-flex">
@@ -44,15 +44,13 @@
 
       <div class="container">
         <ul class="list-group list-group-flush">
-          <% for (var i =0; i < works.length; i++){ %>
+          <% for (var i =0; i < requests.length; i++){ %>
           <li class="list-group-item">
-            <!-- <div>uid: <%= works[i]._id %></div> -->
-            <h5><%= works[i].title %></h5>
-            <div>name: <%= works[i].unserInfo.user_name %></div>
-            <div>due_date: <%= works[i].due_date %></div>
+            <h5><%= requests[i].title %></h5>
+            <div>due_date: <%= requests[i].due_date %></div>
             <div class="d-flex">
-              <div class="flex-grow-1">create_datetime: <%= works[i].create_datetime %></div>
-              <button data-id="<%= works[i]._id %>" class="more btn btn-secondary">More</button>
+              <div class="flex-grow-1">create_datetime: <%= requests[i].create_datetime %></div>
+              <button data-id="<%= requests[i]._id %>" class="more btn btn-secondary">More</button>
             </div>
           </li>
           <% } %>
@@ -62,21 +60,21 @@
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script>
-      //Enter
-      $("input[type=text]").on("keyup", function (e) {
-        if (e.key == "Enter" || e.keyCode === 13) {
-          $("#search").trigger("click");
-        }
-      });
+    //   //Enter
+    //   $("input[type=text]").on("keyup", function (e) {
+    //     if (e.key == "Enter" || e.keyCode === 13) {
+    //       $("#search").trigger("click");
+    //     }
+    //   });
 
-      $(".more").click(function () {
-        location.href = `/works/${this.dataset.id}`;
-      });
+    //   $(".more").click(function () {
+    //     location.href = `/works/${this.dataset.id}`;
+    //   });
 
-      $("#search").click(function () {
-        var search = $("#search-text").val();
-        location.href = `/works?search=${search}`;
-      });
+    //   $("#search").click(function () {
+    //     var search = $("#search-text").val();
+    //     location.href = `/works?search=${search}`;
+    //   });
     </script>
   </body>
 </html>

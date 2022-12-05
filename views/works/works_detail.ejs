@@ -15,6 +15,12 @@
   <body>
     <%- include('./../components/navbar.ejs') %>
     <div class="container mx-auto">
+      <button
+        class="btn btn-outline-primary"
+        onclick="location.href =`/requests/mode/add?work_uid=<%= work._id %>`"
+      >
+        Add New Request
+      </button>
       <h4>Detail</h4>
       <div>Ttile: <span id="title"><%= work.title %></span></div>
       <div>Due Date: <span id="due"><%= work.due_date %></span></div>
