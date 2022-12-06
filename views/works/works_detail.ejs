@@ -15,13 +15,21 @@
   <body>
     <%- include('./../components/navbar.ejs') %>
     <div class="container mx-auto">
-      <button
-        class="btn btn-outline-primary"
-        onclick="location.href =`/requests/mode/add?work_uid=<%= work._id %>`"
-      >
-        Add New Request
-      </button>
-      <h4>Detail</h4>
+      <div class="d-flex">
+        <h4 class="flex-grow-1">Detail</h4>
+        <button
+          class="mx-2 btn btn-danger"
+          onclick="location.href ='/works/<%= work._id %>/edit'"
+        >
+          Edit
+        </button>
+        <button
+          class="mx-2 btn btn-outline-primary"
+          onclick="location.href =`/requests/mode/add?work_uid=<%= work._id %>`"
+        >
+          Add New Request
+        </button>
+      </div>
       <div>Ttile: <span id="title"><%= work.title %></span></div>
       <div>Due Date: <span id="due"><%= work.due_date %></span></div>
       <div>
@@ -31,9 +39,23 @@
       <div>text: <span id="user-id"><%= work.work_text %></span></div>
       <div>user name: <span id="user-name"></span></div>
       <div>Department: <span id="user-department"></span></div>
-      <button onclick="location.href ='/works/<%= work._id %>/edit'">
-        Edit
-      </button>
+    </div>
+    <% var today = new Date() %>
+    <div class="requests container my-5">
+      <h4>Requests List</h4>
+      <% for (var i =0; i < requests.length; i++){ %>
+
+      <div class="d-flex">
+        <div class="mr-2"><h5><%= requests[i].title %></h5></div>
+        <div class="mx-2"><%= requests[i].to_department %></div>
+        <div class="mx-2"><%= requests[i].due_date %></div>
+        <% if (requests[i].is_done) { %>
+        <div class="text-primary">&#10004;</div>
+        <% } else if (new Date(requests[i].due_date) < today) { %>
+        <div>&#10071;</div>
+        <% } else { %> <% } %>
+      </div>
+      <% } %>
     </div>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 

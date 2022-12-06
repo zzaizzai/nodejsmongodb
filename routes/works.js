@@ -53,15 +53,19 @@ module.exports = function (app) {
         if (work_uid.length == 24) {
             work_uid = ObjectID(work_uid)
         }
-        app.db.collection('works').findOne({ _id: work_uid }, function (err, result) {
-            console.log(result)
+        app.db.collection('works').findOne({ _id: work_uid }, function (err, result_work) {
+            console.log(result_work)
             console.log(err)
-            if (result) {
-                res.render('./works/works_detail.ejs', { work: result })
+            if (result_work) {
+                app.db.collection('requests').find({ work_uid: work_uid }).sort({due_date: 1}).toArray((err, result_requests) => {
+                    res.render('./works/works_detail.ejs', { work: result_work, requests: result_requests })
+                })
+
             } else {
                 res.redirect('/works')
             }
         })
+
     })
 
 
