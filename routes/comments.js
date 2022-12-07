@@ -28,15 +28,21 @@ module.exports = function (app) {
 
     })
 
-    route.post('/add', Service.is_login, (req, res) => {
+    route.post('/add', (req, res) => {
+        if (req.user == undefined) {
+            console.log("no user")
+            res.status(500).send("nop")
+            return
+        } 
         const data = req.body
         const data_input = {
-            user_uid: req.user.user_uid,
+            user_uid: ObjectID(req.user._id),
             text: data.text,
             create_datetime: Service.datetime_now(),
-            request_uid: data.work_uid
+            request_uid: ObjectID(data.request_uid)
 
         }
+        console.log(data_input)
         app.db.collection('comments').insertOne(data_input, function (err, result) {
             if (err) {
                 res.send({ "error": err })

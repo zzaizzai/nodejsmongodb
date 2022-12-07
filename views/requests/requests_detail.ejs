@@ -14,30 +14,35 @@
   </head>
   <body>
     <%- include('./../components/navbar.ejs') %>
-    <div class="container mx-auto" style="background-color: #eee">
-      <button
-        class="btn btn-outline-primary"
-        onclick="location.href ='/users/add'"
-      >
-        Add
-      </button>
+    <div class="container mx-auto">
+      <div class="" style="background-color: #eee">
+        <button
+          class="btn btn-outline-primary"
+          onclick="location.href ='/users/add'"
+        >
+          Add
+        </button>
 
-      <h4>request detail</h4>
-      <input type="hidden" value="<%= request.work_uid %>" id="request-id" />
-      <div><h5><%= request.title %></h5></div>
-      <div><%= request.create_datetime %></div>
-      <div><%= request.to_department %></div>
-      <div><%= request.text %></div>
-      <div><%= request.user_uid %></div>
-      <div><%= request.due_date %></div>
+        <h4>request detail</h4>
+        <input type="hidden" value="<%= request.work_uid %>" id="request-id" />
+        <div><h5><%= request.title %></h5></div>
+        <div><%= request.create_datetime %></div>
+        <div><%= request.to_department %></div>
+        <div><%= request.text %></div>
+        <div><%= request.user_uid %></div>
+        <div><%= request.due_date %></div>
+      </div>
 
       <div class="">
-        comments
+        <h4>comments</h4>
         <div>
           <% for (var i =0; i < comments.length; i++){ %>
           <div class="d-flex">
-            <div><%= comments[i].user_uid ?? "unknown" %>:</div>
-            <div class="mx-2"><%= comments[i].text %></div>
+            <div id="user-id" class="user_uid">
+              <%= comments[i].userInfo.user_name ?? "unknown" %>:
+            </div>
+            <div class="mx-2 flex-grow-1"><%= comments[i].text %></div>
+            <div class=""><%= comments[i].create_datetime %></div>
           </div>
           <% } %>
         </div>
@@ -53,35 +58,35 @@
             class="align-self-start btn btn-primary mx-2"
             id="send"
             ,
-            data-id="<%=request.work_uid %>"
+            data-id="<%=request._id %>"
           >
             send
           </button>
         </div>
       </div>
     </div>
+
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script>
-      // const request_uid = $("#request-id").val()
-      // $.ajax({
-      //     method:"get",
-      //     url: `/comments/get_data?request_uid=${request_uid}`
-      // }).done(function(result){
-      //     console.log(result)
-      // })
       $("#send").click(function () {
         console.log("new comments");
-        var work_uid = this.dataset.id;
+        var request_uid = this.dataset.id;
         $.ajax({
           method: "post",
           url: "/comments/add",
           data: {
-            work_uid: work_uid,
+            request_uid: request_uid,
             text: $("#text").val(),
           },
-        }).done(function (result) {
-          console.log(result);
-        });
+        })
+          .done(function (result) {
+            console.log(result);
+            $("#text").val("");
+            window.location.reload();
+          })
+          .fail(function (err) {
+            console.log(err);
+          });
       });
     </script>
   </body>

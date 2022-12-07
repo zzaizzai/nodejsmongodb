@@ -3,6 +3,9 @@ module.exports = function (app) {
     var route = require('express').Router();
     const { ObjectID } = require('bson');
     const Service = require('./Service')
+
+
+    
     route.get('/', (req, res) => {
         app.db.collection('users').find().toArray((err, result) => {
             res.render('./users/users.ejs', { users: result })
@@ -23,12 +26,12 @@ module.exports = function (app) {
 
     route.get('/data/:id', (req, res) => {
         const user_id = req.params.id
+        console.log(user_id)
         app.db.collection('users').findOne({ id: user_id }, (err, result) => {
             delete result.pw
             res.send({ user: result })
         })
     })
-
 
     route.post('/signup', (req, res) => {
         console.log(req.body)

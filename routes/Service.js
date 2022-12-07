@@ -17,5 +17,9 @@ function is_login(req, res, next) {
     }
 }
 
+function test() {
+    return "test done"
+}
 
-module.exports = { datetime_now, is_login }
+
+module.exports = { datetime_now, is_login, test }

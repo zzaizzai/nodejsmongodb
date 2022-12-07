@@ -46,7 +46,15 @@
       <% for (var i =0; i < requests.length; i++){ %>
 
       <div class="d-flex">
-        <div class="mr-2"><h5><%= requests[i].title %></h5></div>
+        <div class="mr-2">
+          <h5>
+            <a
+              href="/requests/<%= requests[i]._id %>"
+              style="text-decoration: none; color: black"
+              ><%= requests[i].title %></a
+            >
+          </h5>
+        </div>
         <div class="mx-2"><%= requests[i].to_department %></div>
         <div class="mx-2"><%= requests[i].due_date %></div>
         <% if (requests[i].is_done) { %>
@@ -56,7 +64,12 @@
         <% } else { %> <% } %>
       </div>
       <% } %>
+
+      <div class="mt-5">
+        <h4>Comments</h4>
+      </div>
     </div>
+
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
     <script>

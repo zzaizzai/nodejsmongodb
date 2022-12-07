@@ -18,27 +18,35 @@ module.exports = function (app) {
         if (request_uid.length == 24) {
             request_uid = ObjectID(request_uid)
         }
-        var pipeline = [
-            {
-                $match: { "_id": request_uid }
 
-            },
-            {
-                $lookup: {
-                    from: "comments",
-                    localField: "_id",
-                    foreignField: "request_uid",
-                    as: "comments"
+        app.db.collection('requests').findOne({ _id: request_uid }, function (err, result_requests) {
+            // app.db.collection('requests').aggregate(pipeline).toArray(function (err, result) {
+            request = result_requests
+
+            var pipeline_comment = [
+                {
+                    $match: { "request_uid": request._id }
+
                 },
-            },
-            {$limit: 1}
-        ]
-        // app.db.collection('requests').findOne({_id: request_uid}, function(err, result){
-        app.db.collection('requests').aggregate(pipeline).toArray(function (err, result) {
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "user_uid",
+                        foreignField: "_id",
+                        as: "userInfo"
+                    },
+                },
+                {
+                    $unwind: "$userInfo"
+                }
+            ]
 
-            console.log(result[0])
-            res.render('./requests/requests_detail.ejs', {request: result[0], comments: result[0].comments})
-            // res.send({request: result, comments: result.comments})
+
+            app.db.collection('comments').aggregate(pipeline_comment).toArray(function (err, result_comments) {
+                res.render('./requests/requests_detail.ejs', { request: result_requests, comments: result_comments })
+            })
+
+
         })
     })
 
