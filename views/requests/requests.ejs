@@ -50,7 +50,7 @@
             <div>due_date: <%= requests[i].due_date %></div>
             <div class="d-flex">
               <div class="flex-grow-1">create_datetime: <%= requests[i].create_datetime %></div>
-              <button data-id="<%= requests[i]._id %>" class="more btn btn-secondary">More</button>
+              <button onclick="location.href = `/requests/<%=requests[i]._id%>`;" data-id="<%= requests[i]._id %>" class="more btn btn-secondary">More</button>
             </div>
           </li>
           <% } %>

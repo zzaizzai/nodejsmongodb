@@ -12,6 +12,37 @@ module.exports = function (app) {
         })
     })
 
+
+    route.get('/:request_uid', (req, res) => {
+        var request_uid = req.params.request_uid
+        if (request_uid.length == 24) {
+            request_uid = ObjectID(request_uid)
+        }
+        var pipeline = [
+            {
+                $match: { "_id": request_uid }
+
+            },
+            {
+                $lookup: {
+                    from: "comments",
+                    localField: "_id",
+                    foreignField: "request_uid",
+                    as: "comments"
+                },
+            },
+            {$limit: 1}
+        ]
+        // app.db.collection('requests').findOne({_id: request_uid}, function(err, result){
+        app.db.collection('requests').aggregate(pipeline).toArray(function (err, result) {
+
+            console.log(result[0])
+            res.render('./requests/requests_detail.ejs', {request: result[0], comments: result[0].comments})
+            // res.send({request: result, comments: result.comments})
+        })
+    })
+
+
     route.get('/mode/add', Service.is_login, (req, res) => {
         var work_uid = req.query.work_uid
         console.log(work_uid)

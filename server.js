@@ -108,6 +108,7 @@ app.use('/mypage', require('./routes/mypage.js')(app))
 app.use('/users', require('./routes/users.js')(app))
 app.use('/works', require('./routes/works.js')(app))
 app.use('/requests', require('./routes/requests.js')(app))
+app.use('/comments', require('./routes/comments.js')(app))
 
 app.get('/test', function (req, res) {
     res.send('dddd')
