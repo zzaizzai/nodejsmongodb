@@ -5,10 +5,12 @@ module.exports = function (app) {
     const Service = require('./Service')
 
 
-    
+
     route.get('/', (req, res) => {
+        const role = Service.check_admin(req.user?.role)
+
         app.db.collection('users').find().toArray((err, result) => {
-            res.render('./users/users.ejs', { users: result })
+            res.render('./users/users.ejs', { users: result, role: role })
         })
     })
 
@@ -17,18 +19,48 @@ module.exports = function (app) {
         res.render('./users/users_add.ejs')
     })
 
-    route.get('/:id', (req, res) => {
-        user_id = req.params.id
-        app.db.collection('users').findOne({ id: user_id }, (err, result) => {
-            res.render('./users/users_detail.ejs')
+    route.get('/:uid', (req, res) => {
+
+        const role = Service.check_admin(req.user?.role)
+
+        var user_uid = ""
+        try {
+            user_uid = ObjectID(req.params.uid)
+        }
+        catch {
+            res.redirect('/')
+            return
+        }
+        app.db.collection('users').findOne({ _id: user_uid }, (err, result) => {
+            console.log(result)
+            res.render('./users/users_detail.ejs', { user: result, role: role })
         })
     })
 
-    route.get('/data/:id', (req, res) => {
-        const user_id = req.params.id
+    route.get('/:uid/edit', (req, res) => {
+
+        const role = Service.check_admin(req.user?.role)
+
+        var user_uid = ""
+        try {
+            user_uid = ObjectID(req.params.uid)
+        }
+        catch {
+            res.redirect('/')
+            return
+        }
+        app.db.collection('users').findOne({ _id: user_uid }, (err, result) => {
+            console.log(result)
+            res.render('./users/users_edit.ejs', { user: result, role: role })
+        })
+    })
+
+
+    route.get('/data/:uid', (req, res) => {
+        const user_uid = req.params.uid
         console.log(user_id)
-        app.db.collection('users').findOne({ id: user_id }, (err, result) => {
-            delete result.pw
+        app.db.collection('users').findOne({ _id: user_uid }, (err, result) => {
+            // delete result.pw
             res.send({ user: result })
         })
     })

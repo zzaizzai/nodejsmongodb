@@ -23,7 +23,7 @@
         <div class="mr-2" id="user-name"></div>
         <div class="d-flex">
           (
-          <div class="mx-2" id="user-id"><%=work.user_id %></div>
+          <div class="mx-2" id="user-uid"><%=work.user_uid %></div>
           )
         </div>
       </div>
@@ -74,7 +74,7 @@
     <script>
       $.ajax({
         method: "get",
-        url: `/users/data/${$("#user-id").html()}`,
+        url: `/users/data/${$("#user-uid").html()}`,
       }).done((result) => {
         console.log(result);
         user = result.user;

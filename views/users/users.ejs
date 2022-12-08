@@ -17,20 +17,28 @@
     <div class="container mx-auto">
       <div class="d-flex">
         <h4 class="flex-grow-1">Users</h4>
+        <% if (role == "admin") { %>
         <button
           class="btn btn-outline-primary"
           onclick="location.href ='/users/mode/add'"
         >
           Add
         </button>
+        <% } %>
       </div>
-      <div >
+      <div>
         <ul class="list-group list-group-flush">
           <% for (var i =0; i < users.length; i++){ %>
           <li class="list-group-item">
-            <div>uid: <%= users[i]._id %></div>
-            <div>id: <%= users[i].id %></div>
-            <div>name: <%= users[i].user_name %></div>
+            <div class="d-flex">
+              <div>
+                <a href="/users/<%= users[i]._id %>" style="color: black"
+                  ><h5><%= users[i].user_name %></h5></a
+                >
+              </div>
+              <div class="mx-3">(<%= users[i].id %>)</div>
+            </div>
+
             <div>department: <%= users[i].department ?? 'None' %></div>
           </li>
           <% } %>

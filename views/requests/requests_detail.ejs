@@ -16,13 +16,6 @@
     <%- include('./../components/navbar.ejs') %>
     <div class="container mx-auto">
       <div class="" style="background-color: #eee">
-        <button
-          class="btn btn-outline-primary"
-          onclick="location.href ='/users/add'"
-        >
-          Add
-        </button>
-
         <h4>request detail</h4>
         <input type="hidden" value="<%= request.work_uid %>" id="request-id" />
         <div><h5><%= request.title %></h5></div>

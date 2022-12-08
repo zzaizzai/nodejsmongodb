@@ -27,8 +27,8 @@ module.exports = function (app) {
             {
                 $lookup: {
                     from: "users",
-                    localField: "user_id",
-                    foreignField: "id",
+                    localField: "user_uid",
+                    foreignField: "_id",
                     as: "unserInfo"
                 },
             },
@@ -37,34 +37,112 @@ module.exports = function (app) {
 
         app.db.collection("works").aggregate(condition).toArray((err, result) => {
             console.log(result)
-            if (result.length === 0) {
-                res.redirect('/works')
-                return
-            } else {
-                res.render('./works/works.ejs', { works: result })
 
-            }
+            res.render('./works/works.ejs', { works: result, search_text: search })
+
+
         })
+    })
+
+    router.get('/data/get_my_works_with_user_uid', function (req, res) {
+        if (req.user == undefined) {
+            res.send({ my_works: null })
+            return
+        }
+
+        var search = req.user._id
+
+        var condition = [
+            {
+                $match:
+                {
+                    user_uid: ObjectID(search)
+                }
+            },
+            { $sort: { create_datetime: -1 } },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "user_uid",
+                    foreignField: "_id",
+                    as: "unserInfo"
+                },
+            },
+            { $unwind: "$unserInfo" },
+        ]
+
+        app.db.collection("works").aggregate(condition).toArray((err, result) => {
+            console.log(result)
+
+            // res.render('./works/works.ejs', { works: result, search_text: search })
+
+            res.send({ my_works: result })
+
+
+        })
+
+
+
+
+
+
     })
 
 
     router.get('/:work_uid', function (req, res) {
         var work_uid = req.params.work_uid
-        if (work_uid.length == 24) {
+
+        try {
             work_uid = ObjectID(work_uid)
         }
-        app.db.collection('works').findOne({ _id: work_uid }, function (err, result_work) {
-            console.log(result_work)
-            console.log(err)
-            if (result_work) {
-                app.db.collection('requests').find({ work_uid: work_uid }).sort({due_date: 1}).toArray((err, result_requests) => {
-                    res.render('./works/works_detail.ejs', { work: result_work, requests: result_requests })
-                })
+        catch {
+            res.send("404")
+            return
+        }
 
-            } else {
-                res.redirect('/works')
-            }
+
+        var condition = [
+            {
+                $match:
+                {
+                    _id: ObjectID(work_uid)
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "user_uid",
+                    foreignField: "_id",
+                    as: "userInfo"
+                },
+            },
+            { $unwind: "$userInfo" },
+        ]
+
+        app.db.collection("works").aggregate(condition).toArray((err, result) => {
+            result_work = result[0]
+            console.log(result_work.userInfo)
+            app.db.collection('requests').find({ work_uid: work_uid }).sort({ due_date: 1 }).toArray((err, result_requests) => {
+                res.render('./works/works_detail.ejs', { work: result_work, user: result_work.userInfo, requests: result_requests })
+                // res.send( { work: result_work, user: result[0].userInfo, requests: result_requests })
+            })
         })
+
+
+        // app.db.collection('works').findOne({ _id: work_uid }, function (err, result_work) {
+        //     console.log(result_work)
+        //     console.log(err)
+        //     if (result_work) {
+        //         app.db.collection('requests').find({ work_uid: work_uid }).sort({ due_date: 1 }).toArray((err, result_requests) => {
+        //             res.render('./works/works_detail.ejs', { work: result_work, requests: result_requests })
+        //         })
+
+        //     } else {
+        //         res.redirect('/works')
+        //     }
+        // })
+
+
 
     })
 
@@ -112,7 +190,7 @@ module.exports = function (app) {
             due_date: work.dueDate,
             work_text: work.text,
             create_datetime: Service.datetime_now(),
-            user_id: user.id,
+            user_uid: ObjectID(user._id),
         }
         console.log(data)
         app.db.collection('works').insertOne(data, (err, result) => {

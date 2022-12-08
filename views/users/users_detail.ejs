@@ -14,19 +14,27 @@
   </head>
   <body>
     <%- include('./../components/navbar.ejs') %>
-    <div class="container mx-2" style="background-color: #eee;">
-      <button
-        class="btn btn-outline-primary"
-        onclick="location.href ='/users/add'"
-      >
-        Add
-      </button>
-      <div class="container mx-2">
-        <h4>Users detail</h4>
-        ?
-        <ul class="list-group list-group-flush">
-        </ul>
+
+    <div class="container mx-2" style="background-color: #eee">
+      <div class="d-flex">
+        <div class="flex-grow-1 d-flex">
+          <h5><%= user.user_name%></h5>
+          <div class="mx-3">(<%= user.id%>)</div>
+        </div>
+
+        <div>uid: <%= user._id%></div>
+
+        <% if (role == "admin") { %>
+        <button
+          onclick="location.href='/users/<%=user._id%>/edit'"
+          class="btn btn-danger"
+        >
+          Edit
+        </button>
+        <% } %>
       </div>
+      <div>Department: <%= user.department%></div>
+      <ul class="list-group list-group-flush"></ul>
     </div>
   </body>
 </html>

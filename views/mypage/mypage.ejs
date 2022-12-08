@@ -16,7 +16,7 @@
     <%- include('./../components/navbar.ejs') %>
     <div class="container">
       <h3>Mypage</h3>
-      
+
       <table>
         <% if (user){ %>
         <tr>
@@ -42,20 +42,37 @@
 
         <% } %>
       </table>
-      <button onclick="location.href='/mypage/mode/edit'" class="btn btn-outline-primary">Edit</button>
+      <button
+        onclick="location.href='/mypage/mode/edit'"
+        class="btn btn-outline-primary"
+      >
+        Edit
+      </button>
       <button id="logout" class="btn btn-danger mx-2">logout</button>
+      <div class="my-5"><h4>Works list</h4><div class="my-works"></div></div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script>
-      $('#logout').click(function(){
+      $("#logout").click(function () {
         $.ajax({
           method: "GET",
           url: "/login/logout",
-        }).done((result)=> {
-          location.href = '/'
-        })
-      })
+        }).done((result) => {
+          location.href = "/";
+        });
+      });
+
+      $.ajax({
+        method: "get",
+        url: "/works/data/get_my_works_with_user_uid",
+      }).done((result) => {
+        console.log();
+        result.my_works.forEach((e) => {
+          console.log(e);
+          $(".my-works").append(`<div>${e.title}</div>`);
+        });
+      });
     </script>
   </body>
 </html>

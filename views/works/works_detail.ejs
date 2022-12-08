@@ -16,7 +16,7 @@
     <%- include('./../components/navbar.ejs') %>
     <div class="container mx-auto">
       <div class="d-flex">
-        <h4 class="flex-grow-1">Detail</h4>
+        <h4 class="flex-grow-1"><span id="title"><%= work.title %></span></h4>
         <button
           class="mx-2 btn btn-danger"
           onclick="location.href ='/works/<%= work._id %>/edit'"
@@ -30,15 +30,21 @@
           Add New Request
         </button>
       </div>
-      <div>Ttile: <span id="title"><%= work.title %></span></div>
-      <div>Due Date: <span id="due"><%= work.due_date %></span></div>
       <div>
         Create datetime: <span id="due"><%= work.create_datetime %></span>
       </div>
-      <div>user id: <span id="user-id"><%= work.user_id %></span></div>
-      <div>text: <span id="user-id"><%= work.work_text %></span></div>
-      <div>user name: <span id="user-name"></span></div>
-      <div>Department: <span id="user-department"></span></div>
+
+      <div>Due Date: <span id="due"><%= work.due_date %></span></div>
+
+      <div>user name: <span id="user-name"><%= user.user_name %></span></div>
+      <div>
+        Department: <span id="user-department"><%= user.department %></span>
+      </div>
+      <div class="card my-2">
+        <div class="card-body">
+          <span id="user-id"><%= work.work_text %></span>
+        </div>
+      </div>
     </div>
     <% var today = new Date() %>
     <div class="requests container my-5">

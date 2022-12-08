@@ -5,11 +5,46 @@ module.exports = function (app) {
     const Service = require('./Service')
 
     route.get('/', (req, res) => {
+        var search = req.query.search
+        console.log(search)
+        if (search != undefined) {
 
-        req.app.db.collection("requests").find().toArray((err, result) => {
+
+        } else {
+            search = ""
+        }
+
+        console.log(search)
+        var sort = req.query.sort
+        console.log(sort)
+
+        var condition = [
+            {
+                $match:
+                {
+                    title: { $regex: search }
+                }
+            },
+            { $sort: { create_datetime: -1 } },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "user_uid",
+                    foreignField: "_id",
+                    as: "unserInfo"
+                },
+            },
+            { $unwind: "$unserInfo" },
+        ]
+
+        app.db.collection("requests").aggregate(condition).toArray((err, result) => {
             console.log(result)
-            res.render('./requests/requests.ejs', { requests: result })
+
+            res.render('./requests/requests.ejs', { requests: result, search_text: search })
+
+
         })
+
     })
 
 
