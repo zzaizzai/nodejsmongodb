@@ -17,7 +17,7 @@ module.exports = function (app) {
         console.log(req.query)
         const q = req.query
 
-        app.db.collection("comments").find({request_uid: q.request_uid}).toArray((err, result)=> {
+        app.db.collection("comments").find({parent_uid: q.parent_uid}).toArray((err, result)=> {
             console.log(result)
 
             res.send({ comments: result})
@@ -35,11 +35,13 @@ module.exports = function (app) {
             return
         } 
         const data = req.body
+        
+        console.log(data)
         const data_input = {
             user_uid: ObjectID(req.user._id),
             text: data.text,
             create_datetime: Service.datetime_now(),
-            request_uid: ObjectID(data.request_uid)
+            parent_uid: ObjectID(data.parent_uid)
 
         }
         console.log(data_input)

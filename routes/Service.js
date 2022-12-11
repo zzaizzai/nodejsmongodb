@@ -17,8 +17,23 @@ function is_login(req, res, next) {
     }
 }
 
+
+function check_user_role(request) {
+    var role = "general"
+    try{
+        role = request.user.role
+    }
+    catch {
+        role = "general"
+    }
+
+    return role
+    
+}
+
 function check_admin(user_role) {
     let role = "general"
+    console.log(user_role)
     
     if (user_role == "admin") {
         role = "admin"
@@ -31,4 +46,4 @@ function test() {
 }
 
 
-module.exports = { datetime_now, is_login, test, check_admin }
+module.exports = { datetime_now, is_login, test, check_admin, check_user_role }

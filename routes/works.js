@@ -77,15 +77,7 @@ module.exports = function (app) {
             // res.render('./works/works.ejs', { works: result, search_text: search })
 
             res.send({ my_works: result })
-
-
         })
-
-
-
-
-
-
     })
 
 
@@ -99,7 +91,6 @@ module.exports = function (app) {
             res.send("404")
             return
         }
-
 
         var condition = [
             {
@@ -121,29 +112,43 @@ module.exports = function (app) {
 
         app.db.collection("works").aggregate(condition).toArray((err, result) => {
             result_work = result[0]
-            console.log(result_work.userInfo)
+
             app.db.collection('requests').find({ work_uid: work_uid }).sort({ due_date: 1 }).toArray((err, result_requests) => {
-                res.render('./works/works_detail.ejs', { work: result_work, user: result_work.userInfo, requests: result_requests })
-                // res.send( { work: result_work, user: result[0].userInfo, requests: result_requests })
+
+
+                var condition_2 = [
+                    {
+                        $match:
+                        {
+                            "parent_uid": ObjectID(result_work._id)
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: "users",
+                            localField: "user_uid",
+                            foreignField: "_id",
+                            as: "userInfo"
+                        },
+                    },
+                    { $unwind: "$userInfo" },
+                ]
+
+
+                app.db.collection('comments').aggregate(condition_2).toArray((err, result_comments) => {
+                    console.log(result_comments)
+                    res.render('./works/works_detail.ejs',
+                        {
+                            work: result_work,
+                            user: result_work.userInfo,
+                            requests: result_requests,
+                            comments: result_comments,
+                        })
+                })
+
+
             })
         })
-
-
-        // app.db.collection('works').findOne({ _id: work_uid }, function (err, result_work) {
-        //     console.log(result_work)
-        //     console.log(err)
-        //     if (result_work) {
-        //         app.db.collection('requests').find({ work_uid: work_uid }).sort({ due_date: 1 }).toArray((err, result_requests) => {
-        //             res.render('./works/works_detail.ejs', { work: result_work, requests: result_requests })
-        //         })
-
-        //     } else {
-        //         res.redirect('/works')
-        //     }
-        // })
-
-
-
     })
 
 

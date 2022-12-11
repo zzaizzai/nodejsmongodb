@@ -57,10 +57,10 @@ module.exports = function (app) {
         app.db.collection('requests').findOne({ _id: request_uid }, function (err, result_requests) {
             // app.db.collection('requests').aggregate(pipeline).toArray(function (err, result) {
             request = result_requests
-
+            console.log(request)
             var pipeline_comment = [
                 {
-                    $match: { "request_uid": request._id }
+                    $match: { "parent_uid": ObjectID(request._id) }
 
                 },
                 {

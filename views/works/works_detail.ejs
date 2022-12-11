@@ -73,21 +73,68 @@
 
       <div class="mt-5">
         <h4>Comments</h4>
+        <% for (var i =0; i < comments.length; i++){ %>
+        <div class="d-flex">
+          <div><%= comments[i].userInfo.user_name %>: </div>
+          <div><%= comments[i].text%></div>
+        </div>
+        <% } %>
+        <form id="form">
+          <div class="d-flex">
+            <textarea
+              name="text"
+              id="text"
+              cols="30"
+              rows="1"
+              class="form-control align-self-start"
+            ></textarea>
+            <button
+              type="button"
+              class="align-self-start btn btn-primary mx-2"
+              id="send"
+            >
+              send
+              <input
+                type="hidden"
+                value="<%=work._id %>"
+                name="parent_uid"
+                id="parent_uid"
+              />
+            </button>
+          </div>
+        </form>
       </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
     <script>
-      $.ajax({
-        method: "get",
-        url: `/users/data/${$("#user-id").html()}`,
-      }).done((result) => {
-        console.log(result);
-        user = result.user;
-        $("#user-name").text(user.user_name);
-        $("#user-department").text(user.department);
+      $("#send").click(() => {
+        data = $("#form").serialize();
+        $.ajax({
+          method: "post",
+          url: "/comments/add",
+          data: data,
+        })
+          .done(function (result) {
+            console.log(result);
+            $("#text").val("");
+            window.location.reload();
+          })
+          .fail(function (err) {
+            console.log(err);
+          });
       });
+
+      // $.ajax({
+      //   method: "get",
+      //   url: `/users/data/${$("#user-id").html()}`,
+      // }).done((result) => {
+      //   console.log(result);
+      //   user = result.user;
+      //   $("#user-name").text(user.user_name);
+      //   $("#user-department").text(user.department);
+      // });
     </script>
   </body>
 </html>

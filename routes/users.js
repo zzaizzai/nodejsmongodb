@@ -7,8 +7,10 @@ module.exports = function (app) {
 
 
     route.get('/', (req, res) => {
-        const role = Service.check_admin(req.user?.role)
-
+        var role = ""
+        if (req.user) {
+            role = Service.check_admin(req.user.role)
+        }
         app.db.collection('users').find().toArray((err, result) => {
             res.render('./users/users.ejs', { users: result, role: role })
         })
@@ -21,7 +23,7 @@ module.exports = function (app) {
 
     route.get('/:uid', (req, res) => {
 
-        const role = Service.check_admin(req.user?.role)
+        var role = Service.check_user_role(req)
 
         var user_uid = ""
         try {
@@ -32,14 +34,21 @@ module.exports = function (app) {
             return
         }
         app.db.collection('users').findOne({ _id: user_uid }, (err, result) => {
-            console.log(result)
-            res.render('./users/users_detail.ejs', { user: result, role: role })
+            app.db.collection('works').find({user_uid: result._id }).sort({due_date:-1}).toArray((err, work_list)=> {
+                console.log(work_list)
+                res.render('./users/users_detail.ejs', { user: result, role: role , work_list: work_list})
+            })
+
+
+            
         })
     })
 
     route.get('/:uid/edit', (req, res) => {
 
-        const role = Service.check_admin(req.user?.role)
+
+        role = Service.check_user_role(req)
+
 
         var user_uid = ""
         try {
@@ -51,6 +60,7 @@ module.exports = function (app) {
         }
         app.db.collection('users').findOne({ _id: user_uid }, (err, result) => {
             console.log(result)
+
             res.render('./users/users_edit.ejs', { user: result, role: role })
         })
     })
@@ -58,7 +68,6 @@ module.exports = function (app) {
 
     route.get('/data/:uid', (req, res) => {
         const user_uid = req.params.uid
-        console.log(user_id)
         app.db.collection('users').findOne({ _id: user_uid }, (err, result) => {
             // delete result.pw
             res.send({ user: result })
@@ -82,9 +91,7 @@ module.exports = function (app) {
                 return
             }
             res.status(200).send({ message: "success" })
-
         })
-
     })
 
     route.get('/:id', function (req, res) {
@@ -93,8 +100,6 @@ module.exports = function (app) {
             res.send(result)
         })
     })
-
-
 
     return route
 }
