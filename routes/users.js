@@ -7,10 +7,10 @@ module.exports = function (app) {
 
 
     route.get('/', (req, res) => {
-        var role = ""
-        if (req.user) {
-            role = Service.check_admin(req.user.role)
-        }
+
+        var role =  res.user?.role ?? "general"
+
+        var role = Service.check_user_role(req)
         app.db.collection('users').find().toArray((err, result) => {
             res.render('./users/users.ejs', { users: result, role: role })
         })
@@ -23,7 +23,8 @@ module.exports = function (app) {
 
     route.get('/:uid', (req, res) => {
 
-        var role = Service.check_user_role(req)
+        
+        var role =  res.user?.role ?? "general"
 
         var user_uid = ""
         try {
@@ -47,7 +48,7 @@ module.exports = function (app) {
     route.get('/:uid/edit', (req, res) => {
 
 
-        role = Service.check_user_role(req)
+        var role =  res.user?.role ?? "general"
 
 
         var user_uid = ""
