@@ -9,13 +9,25 @@ require('dotenv').config()
 const PORT = process.env.PORT || 5000
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+const session = require('express-session')
+const MemoryStore = require('memorystore')(session)
+
+
+
 
 app
     .use(express.static(path.join(__dirname, 'public')))
     .set('views', path.join(__dirname, 'views'))
     .set('view engine', 'ejs')
 
-
+app.use(session({
+    cookie: { maxAge: 86400000 },
+    store: new MemoryStore({
+        checkPeriod: 86400000 // prune expired entries every 24h
+    }),
+    resave: false,
+    secret: 'keyboard cat'
+}))
 
 
 app.listen(PORT, () => console.log(`Listening on ${PORT}`))
@@ -36,7 +48,7 @@ MongoClient.connect(mongoDbUrl, function (err, client) {
 
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const session = require('express-session');
+// const session = require('express-session');
 
 app.use(session({ secret: '1234', resave: true, saveUninitialized: false }));
 app.use(passport.initialize());
