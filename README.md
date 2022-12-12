@@ -10,3 +10,9 @@ So I am trying to build a system that could be used in like labolatory of compan
 It takes about 20 seconds that the server's reload condition come back completely
 
 https://nodejswork.dt.r.appspot.com/
+
+
+```terminal
+npm install
+node server.js
+```

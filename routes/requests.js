@@ -31,13 +31,13 @@ module.exports = function (app) {
                     from: "users",
                     localField: "user_uid",
                     foreignField: "_id",
-                    as: "unserInfo"
+                    as: "userInfo"
                 },
             },
-            { $unwind: "$unserInfo" },
+            { $unwind: "$userInfo" },
         ]
 
-        app.db.collection("requests").aggregate(condition).toArray((err, result) => {
+        app.db.collection("requests").aggregate(condition).sort({ create_datetime: -1 }).toArray((err, result) => {
             console.log(result)
 
             res.render('./requests/requests.ejs', { requests: result, search_text: search })
@@ -54,13 +54,31 @@ module.exports = function (app) {
             request_uid = ObjectID(request_uid)
         }
 
-        app.db.collection('requests').findOne({ _id: request_uid }, function (err, result_requests) {
-            // app.db.collection('requests').aggregate(pipeline).toArray(function (err, result) {
-            request = result_requests
-            console.log(request)
-            var pipeline_comment = [
+        var pipeline_requests = [
+            {
+                $match: { _id: request_uid }
+
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "user_uid",
+                    foreignField: "_id",
+                    as: "userInfo"
+                },
+            },
+            {
+                $unwind: "$userInfo"
+            }
+        ]
+
+
+        app.db.collection("requests").aggregate(pipeline_requests).toArray((err, result_requests_list) => {
+
+            var result_req = result_requests_list[0]
+            var pipeline_comments = [
                 {
-                    $match: { "parent_uid": ObjectID(request._id) }
+                    $match: { "parent_uid": ObjectID(result_req._id) }
 
                 },
                 {
@@ -76,12 +94,17 @@ module.exports = function (app) {
                 }
             ]
 
+            var status_msg = Service.status_request(result_req.create_datetime, result_req.due_date)
+            if (result_req.is_done_datetime) {
+                status_msg.status = "Completed"
+                status_msg.status_msg = "Completed by .... days ago"
+            }
 
-            app.db.collection('comments').aggregate(pipeline_comment).toArray(function (err, result_comments) {
-                res.render('./requests/requests_detail.ejs', { request: result_requests, comments: result_comments })
+
+            app.db.collection('comments').aggregate(pipeline_comments).toArray(function (err, result_comments) {
+                res.render('./requests/requests_detail.ejs',
+                    { request: result_req, comments: result_comments, status_msg: status_msg })
             })
-
-
         })
     })
 
@@ -101,10 +124,42 @@ module.exports = function (app) {
             if (result) {
                 res.render('./requests/requests_add.ejs', { work: result })
             } else {
-                res.redirect('/works')
+                res.redirect('/requests')
             }
         })
 
+
+
+    })
+
+    route.get('/:request_uid/edit', (req, res) => {
+        var request_uid = req.params.request_uid
+
+        try {
+            request_uid = ObjectID(request_uid)
+        }
+        catch {
+            res.redirect('/requests')
+            return
+
+        }
+
+        app.db.collection("requests").findOne({ _id: request_uid }, (err, result_req) => {
+            app.db.collection("users").findOne({ _id: result_req.user_uid }, (err, result_user) => {
+                app.db.collection("departments").find().toArray((err, department_list) => {
+                    if (result_req && result_user) {
+                        res.render('./requests/requests_edit.ejs', { request: result_req, user: result_user, department_list: department_list })
+                    } else {
+                        res.redirect('/requests')
+                    }
+
+                })
+
+            })
+
+
+
+        })
 
 
     })
@@ -133,6 +188,26 @@ module.exports = function (app) {
             console.log(result)
             res.send({ "message": "success" })
         })
+    })
+
+    route.post('/edit', (req, res) => {
+        const data = req.body
+        try {
+            app.db.collection("requests").updateOne({ _id: ObjectID(data._id) },
+                {
+
+                    $set: {
+                        title: data.title,
+                        due_date: data.due_date,
+                        to_department: data.to_department,
+                        text: data.text
+                    }
+                })
+            res.send({ "message": "good" })
+        }
+        catch {
+            res.send({ "err": "something wrong" })
+        }
     })
 
     return route

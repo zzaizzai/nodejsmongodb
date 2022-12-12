@@ -4,14 +4,11 @@ module.exports = function (app) {
     const { ObjectID } = require('bson');
     const Service = require('./Service')
 
-
-
     route.get('/', (req, res) => {
 
-        var role =  res.user?.role ?? "general"
+        var role = req.user?.role ?? "general"
 
-        var role = Service.check_user_role(req)
-        app.db.collection('users').find().toArray((err, result) => {
+        app.db.collection('users').find().sort({create_datetime: -1}).toArray((err, result) => {
             res.render('./users/users.ejs', { users: result, role: role })
         })
     })
@@ -21,10 +18,9 @@ module.exports = function (app) {
         res.render('./users/users_add.ejs')
     })
 
-    route.get('/:uid', (req, res) => {
+    route.get('/:uid', Service.is_login, (req, res) => {
 
-        
-        var role =  res.user?.role ?? "general"
+        var role = req.user?.role ?? "general"
 
         var user_uid = ""
         try {
@@ -35,21 +31,18 @@ module.exports = function (app) {
             return
         }
         app.db.collection('users').findOne({ _id: user_uid }, (err, result) => {
-            app.db.collection('works').find({user_uid: result._id }).sort({due_date:-1}).toArray((err, work_list)=> {
-                console.log(work_list)
-                res.render('./users/users_detail.ejs', { user: result, role: role , work_list: work_list})
+            app.db.collection('works').find({ user_uid: result._id }).sort({ due_date: -1 }).toArray((err, work_list) => {
+                res.render('./users/users_detail.ejs', { user: result, role: role, work_list: work_list })
             })
 
 
-            
+
         })
     })
 
-    route.get('/:uid/edit', (req, res) => {
+    route.get('/:uid/edit', Service.is_login, (req, res) => {
 
-
-        var role =  res.user?.role ?? "general"
-
+        var role = req.user?.role ?? "general"
 
         var user_uid = ""
         try {
@@ -59,13 +52,40 @@ module.exports = function (app) {
             res.redirect('/')
             return
         }
-        app.db.collection('users').findOne({ _id: user_uid }, (err, result) => {
-            console.log(result)
-
-            res.render('./users/users_edit.ejs', { user: result, role: role })
+        app.db.collection('users').findOne({ _id: user_uid }, (err, result_user) => {
+            app.db.collection('departments').find().toArray((err, department_list) => {
+                res.render('./users/users_edit.ejs',
+                    { user: result_user, department_list: department_list, role: role })
+            })
         })
     })
 
+    route.post('/edit', (req, res) => {
+        data = req.body
+        console.log(data)
+
+        user_id = data._id
+        try {
+            var user_id = ObjectID(user_id)
+        }
+        catch {
+            res.send({ "err": "something wrong" })
+        }
+        try {
+            app.db.collection("users").updateOne({ _id: user_id }, {
+                $set: {
+                    user_name: data.user_name,
+                    pw: data.pw,
+                    department: data.department
+
+                }
+            })
+            res.send({ "message": "good" })
+        }
+        catch {
+            res.send({ "err": "something trouble" })
+        }
+    })
 
     route.get('/data/:uid', (req, res) => {
         const user_uid = req.params.uid
@@ -76,7 +96,6 @@ module.exports = function (app) {
     })
 
     route.post('/signup', (req, res) => {
-        console.log(req.body)
         const data = req.body
         var insert_data = {
             user_name: data.user_name,

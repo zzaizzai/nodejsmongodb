@@ -45,18 +45,30 @@
 
       <div class="container">
         <ul class="list-group list-group-flush">
-          <% for (var i =0; i < works.length; i++){ %>
-          <li class="list-group-item">
-            <!-- <div>uid: <%= works[i]._id %></div> -->
-            <h5><%= works[i].title %></h5>
-            <div>name: <%= works[i].unserInfo.user_name %></div>
-            <div>due_date: <%= works[i].due_date %></div>
-            <div class="d-flex">
-              <div class="flex-grow-1">create_datetime: <%= works[i].create_datetime %></div>
-              <button data-id="<%= works[i]._id %>" class="more btn btn-secondary">More</button>
-            </div>
-          </li>
-          <% } %>
+          <table width="100%">
+            <tbody>
+              <tr class="border-bottom">
+                <td><h4>Title</h4></td>
+                <td width="100"><h4>User</h4></td>
+                <td width="150"><h4>Due_date</h4></td>
+                <td width="200"><h4>Create_time</h4></td>
+              </tr>
+              <% for (var i =0; i < works.length; i++){ %>
+              <tr>
+                <td ><h5><a style="color: black;" href="/works/<%= works[i]._id %>"><%= works[i].title %></a></h5></td>
+                <td><div><%= works[i].unserInfo.user_name %></div></td>
+                <td><div><%= works[i].due_date %></div></td>
+                <td>
+                  <div class="flex-grow-1">
+                    <%= works[i].create_datetime %>
+                  </div>
+                </td>
+
+                <!-- <div>uid: <%= works[i]._id %></div> -->
+              </tr>
+              <% } %>
+            </tbody>
+          </table>
         </ul>
       </div>
     </div>

@@ -29,16 +29,24 @@
       <div>
         <table width="100%">
           <tbody>
-            <tr>
+            <tr class="border-bottom">
               <td><h5>Name</h5></td>
               <td width="100"><h5>id</h5></td>
-              <td width="100"><h5>department</h5></td>
+              <td width="150"><h5>department</h5></td>
+              <td width="150"><h5>create_datetime</h5></td>
             </tr>
             <% for (var i =0; i < users.length; i++){ %>
             <tr>
-              <td><a href="/users/<%= users[i]._id %>" style="color: black;" ><h5><%= users[i].user_name %></h5></a></td>
+              <td>
+                <h5>
+                  <a href="/users/<%= users[i]._id %>" style="color: black"
+                    ><%= users[i].user_name %></a
+                  >
+                </h5>
+              </td>
               <td><%= users[i].id %></td>
               <td><%= users[i].department ?? 'None' %></td>
+              <td><%= users[i].create_datetime ?? 'None' %></td>
             </tr>
             <% } %>
           </tbody>

@@ -15,16 +15,36 @@
   <body>
     <%- include('./../components/navbar.ejs') %>
     <div class="container mx-auto">
-      <div class="" style="background-color: #eee">
-        <h4>request detail</h4>
-        <input type="hidden" value="<%= request.work_uid %>" id="request-id" />
-        <div><h5><%= request.title %></h5></div>
-        <div><%= request.create_datetime %></div>
-        <div><%= request.to_department %></div>
-        <div><%= request.text %></div>
-        <div><%= request.user_uid %></div>
-        <div><%= request.due_date %></div>
+      <div class="d-flex">
+        <h4 class="flex-grow-1"><%= request.title %></h4>
+        <button
+          class="btn btn-danger"
+          onclick="location.href='/requests/<%= request._id %>/edit'"
+        >
+          Edit
+        </button>
       </div>
+      <input type="hidden" value="<%= request.work_uid %>" id="request-id" />
+      <div>Create: <%= request.create_datetime %></div>
+      <div>Department in charge: <%= request.to_department ?? None %></div>
+      <div>User: <%= request.userInfo.user_name %></div>
+      <div><%= request.due_date %></div>
+      <% var today = new Date() %>
+      <div>
+        <% if (status_msg) { %> <% if (status_msg.status == "over") { %>
+        <div class="text-danger"><h5><%= status_msg.status_msg %></h5></div>
+        <% } else if (status_msg.status == "completed") { %>
+        <div><h5><%= status_msg.status_msg %></h5></div>
+        <% } else if ( status_msg.status == "wait"){ %>
+        <div class="">
+          <h5><%= status_msg.status_msg %></h5>
+        </div>
+        <% } else { %>
+        <div class="text-primary"><h5><%= status_msg.status_msg %></h5></div>
+        <% } %> <% } %>
+      </div>
+
+      <div class="card my-2"><div class="m-2"><%= request.text %></div></div>
 
       <div class="">
         <h4>comments</h4>

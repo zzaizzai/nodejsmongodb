@@ -49,33 +49,50 @@
     <% var today = new Date() %>
     <div class="requests container my-5">
       <h4>Requests List</h4>
-      <% for (var i =0; i < requests.length; i++){ %>
-
-      <div class="d-flex">
-        <div class="mr-2">
-          <h5>
-            <a
-              href="/requests/<%= requests[i]._id %>"
-              style="text-decoration: none; color: black"
-              ><%= requests[i].title %></a
-            >
-          </h5>
-        </div>
-        <div class="mx-2"><%= requests[i].to_department %></div>
-        <div class="mx-2"><%= requests[i].due_date %></div>
-        <% if (requests[i].is_done) { %>
-        <div class="text-primary">&#10004;</div>
-        <% } else if (new Date(requests[i].due_date) < today) { %>
-        <div>&#10071;</div>
-        <% } else { %> <% } %>
-      </div>
-      <% } %>
+      <table width="100%">
+        <tbody>
+          <tr>
+            <td><h5>Ttile</h5></td>
+            <td width="100"><h5>Charge</h5></td>
+            <td width="100"><h5>Due_date</h5></td>
+            <td width="50"><h5>Status</h5></td>
+          </tr>
+          <% for (var i =0; i < requests.length; i++){ %>
+          <tr>
+            <td>
+              <h5>
+                <a
+                  href="/requests/<%= requests[i]._id %>"
+                  style="text-decoration: none; color: black"
+                  ><%= requests[i].title %></a
+                >
+              </h5>
+            </td>
+            <td><div class="mx-2"><%= requests[i].to_department %></div></td>
+            <td>
+              <div class="mx-2"><%= requests[i].due_date %></div>
+            </td>
+            <td>
+              <div class="text-center">
+                <% if (requests[i].is_done) { %>
+                <div class="text-primary">&#10004;</div>
+                <% } else if (new Date(requests[i].due_date) < today) { %>
+                <div><h5 class="text-danger">	&#33;</h5></div>
+                <% } else { %>
+                <div><h5>&#183;&#183;&#183;</h5></div>
+                <% } %>
+              </div>
+            </td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
 
       <div class="mt-5">
         <h4>Comments</h4>
         <% for (var i =0; i < comments.length; i++){ %>
         <div class="d-flex">
-          <div><%= comments[i].userInfo.user_name %>: </div>
+          <div><%= comments[i].userInfo.user_name %>:</div>
           <div><%= comments[i].text%></div>
         </div>
         <% } %>

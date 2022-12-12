@@ -13,37 +13,41 @@ function is_login(req, res, next) {
     if (req.user) {
         next()
     } else {
-        res.render('login.ejs', {message: "please login"})
+        res.render('login.ejs', { message: "please login" })
     }
 }
 
 
-function check_user_role(request) {
-    var role = "general"
-    try{
-        role = request.user.role
-    }
-    catch {
-        role = "general"
+function status_request(create_datetime, due_date) {
+    if (due_date == "" || due_date == null) {
+        return { status_msg: "Watting" , status: "wait"}
     }
 
-    return role
-    
+    time_due = new Date(due_date)
+    time_create = new Date(create_datetime)
+    time_now = new Date()
+
+    var difference = Math.abs(time_due - time_now);
+    var days = Math.floor(difference / (1000 * 3600 * 24))
+
+    if (days == 0) {
+        return { status_msg: "today Due date", status: "wait" }
+    }
+
+    if (time_due > time_now) {
+        return { status_msg: `left ${days} day(s)`, status: "wait" }
+    } else {
+        return { status_msg: `over ${days} day(s)`, status: "over" }
+    }
+
+    return { status_msg: "" }
 }
 
-function check_admin(user_role) {
-    let role = "general"
-    console.log(user_role)
-    
-    if (user_role == "admin") {
-        role = "admin"
-    }
-    return role
-}
+
 
 function test() {
     return "test done"
 }
 
 
-module.exports = { datetime_now, is_login, test, check_admin, check_user_role }
+module.exports = { datetime_now, is_login, test, status_request }

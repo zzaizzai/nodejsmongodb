@@ -15,49 +15,57 @@
   <body>
     <%- include('./../components/navbar.ejs') %>
     <div class="container mt-4">
-      <form
-        action="/users/signup"
-        method="POST"
-        id="form_data"
-        name="form_data"
-      >
-        <h5><%= user._id %></h5>
-        <input name="_id" value="<%= user._id %>" type="hidden">
-        <h5><%= user.id %></h5>
+      <form action="/users/signup" method="POST" id="form_data">
+        <input type="hidden" value="<%= request._id %>" name="_id" />
+        <div class="d-flex">
+          <h5><%= user.user_name %></h5>
+          <h5>(<%= user.department %>)</h5>
+        </div>
         <div class="form-group">
-          <label>name</label>
+          <label>Title</label>
           <input
             type="text"
             class="form-control"
-            name="user_name"
-            value="<%= user.user_name %>"
+            name="title"
+            value="<%= request.title %>"
           />
         </div>
         <div class="form-group">
-          <label>pw</label>
+          <label>Due</label>
           <input
-            type="text"
+            type="date"
             class="form-control"
-            name="pw"
-            value="<%= user.pw %>"
+            name="due_date"
+            value="<%= request.due_date %>"
           />
         </div>
 
         <div class="form-group">
-          <label>department</label>
-          <select class="form-control" name="department" id="department">
-            <option selected value="<%= user.department%>">
-              Current: <%= user.department%>
+          <label>department in Charge</label>
+
+          <select class="form-control" name="to_department" id="department">
+            <option selected value="<%= request.to_department%>">
+              Current: <%= request.to_department%>
             </option>
             <% if (department_list) { for (var i = 0; i <
-            department_list.length; i ++ ) { %>
-            <option value="<%= department_list[i].name %>">
+            department_list.length; i++) { %>
+            <option value="<%=  department_list[i].name %>">
               <%= department_list[i].name %>
             </option>
-            <% } } %>
+            <% }} %>
           </select>
         </div>
-        <button type="button" class="btn btn-danger" id="edit">Edit</button>
+
+        <div class="form-group">
+          <label>Text</label>
+          <textarea class="form-control" name="text" rows="2">
+<%= request.text %></textarea
+          >
+        </div>
+
+        <button type="button" class="btn btn-outline-danger" id="edit">
+          Edit
+        </button>
       </form>
       <div class="msg-box">
         <div
@@ -74,10 +82,9 @@
       var data = $("#form_data").serialize();
       $.ajax({
         method: "POST",
-        url: "/users/edit",
+        url: "/requests/edit",
         data: data,
-      })
-      .done((result) => {
+      }).done((result) => {
         console.log(result);
         if (result.message) {
           $(".message").removeClass("d-none");

@@ -42,39 +42,53 @@
         />
         <button id="search" class="btn btn-primary my-2">Search</button>
       </div>
-
-      <div class="container">
-        <ul class="list-group list-group-flush">
-          <% for (var i =0; i < requests.length; i++){ %>
-          <li class="list-group-item">
-            <h5><%= requests[i].title %></h5>
-            <div>due_date: <%= requests[i].due_date %></div>
-            <div class="d-flex">
-              <div class="flex-grow-1">
-                create_datetime: <%= requests[i].create_datetime %>
-              </div>
-              <button
-                onclick="location.href = `/requests/<%=requests[i]._id%>`;"
-                data-id="<%= requests[i]._id %>"
-                class="more btn btn-secondary"
-              >
-                More
-              </button>
-            </div>
-          </li>
+      <table width="100%">
+        <tbody>
+          <tr class="border-bottom">
+            <td><h5>Ttile</h5></td>
+            <td width="100"><h5>Charge</h5></td>
+            <td width="100"><h5>User</h5></td>
+            <td width="100"><h5>DueDate</h5></td>
+            <td width="200"><h5>Create</h5></td>
+            <td width="50"><h5>Status</h5></td>
+          </tr>
+          <% var today = new Date() %> <% for (var i =0; i < requests.length;
+          i++){ %>
+          <tr>
+            <td>
+              <h5>
+                <a style="color: black" href="/requests/<%=requests[i]._id%>"
+                  ><%= requests[i].title %></a
+                >
+              </h5>
+            </td>
+            <td><%= requests[i].to_department %></td>
+            <td><%= requests[i].userInfo.user_name %></td>
+            <td><div><%= requests[i].due_date %></div></td>
+            <td><%= requests[i].create_datetime %></td>
+            <td>
+              <% if (requests[i].is_done_datetime) { %>
+              <div class="text-primary">&#10004;</div>
+              <% } else if (new Date(requests[i].due_date) < today) { %>
+              <div><h5 class="text-danger">&#33;</h5></div>
+              <% } else { %>
+              <div><h5>&#183;&#183;&#183;</h5></div>
+              <% } %>
+            </td>
+          </tr>
           <% } %>
-        </ul>
-      </div>
+        </tbody>
+      </table>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script>
-        //Enter
-        $("input[type=text]").on("keyup", function (e) {
-          if (e.key == "Enter" || e.keyCode === 13) {
-            $("#search").trigger("click");
-          }
-        });
+      //Enter
+      $("input[type=text]").on("keyup", function (e) {
+        if (e.key == "Enter" || e.keyCode === 13) {
+          $("#search").trigger("click");
+        }
+      });
 
       //   $(".more").click(function () {
       //     location.href = `/works/${this.dataset.id}`;

@@ -154,6 +154,7 @@ module.exports = function (app) {
 
     router.get('/mode/add', function (req, res) {
         var user_data = req.user
+        console.log(user_data)
         if (user_data != undefined) {
             res.render('./works/works_add.ejs', { user: user_data })
         } else {

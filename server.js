@@ -10,7 +10,6 @@ const PORT = process.env.PORT || 5000
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 const session = require('express-session')
-const MemoryStore = require('memorystore')(session)
 
 
 
@@ -20,14 +19,13 @@ app
     .set('views', path.join(__dirname, 'views'))
     .set('view engine', 'ejs')
 
+app.set('trust proxy', 1);
+
 app.use(session({
-    cookie: { maxAge: 86400000 },
-    store: new MemoryStore({
-        checkPeriod: 86400000 // prune expired entries every 24h
-    }),
-    resave: false,
+    resave: false, // don't save session if unmodified
+    saveUninitialized: false, // don't create session until something stored
     secret: 'keyboard cat'
-}))
+  }))
 
 
 app.listen(PORT, () => console.log(`Listening on ${PORT}`))

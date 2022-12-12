@@ -30,12 +30,13 @@
     <% } %> <%- include('./components/navbar.ejs') %>
     <div class="container">
       <h3>Hello! Wrok request system</h3>
+      <h5>It is study project but i hope that the works could be more efficient with good system </h5>
 
       <% if (user) { %>
       <h4>Nice to see you, <%= user.user_name %> !!</h4>
       <% } else { %>
-      <button class="btn btn-primary" onclick="location.href ='/login'">
-        login Page
+      <button class="btn btn-primary my-3" onclick="location.href ='/login'">
+        <h3>login Page</h3>
       </button>
       <% } %>
     </div>
