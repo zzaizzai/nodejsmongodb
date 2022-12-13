@@ -18,7 +18,7 @@ module.exports = function (app) {
         res.render('./users/users_add.ejs')
     })
 
-    route.get('/:uid', Service.is_login, (req, res) => {
+    route.get('/:uid',  (req, res) => {
 
         var role = req.user?.role ?? "general"
 

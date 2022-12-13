@@ -1,78 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
-      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
-      crossorigin="anonymous"
-    />
-    <title>Document</title>
-  </head>
-  <body>
-    <%- include('./../components/navbar.ejs') %>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous" />
+  <title>Document</title>
+</head>
+
+<body>
+  <%- include('./../components/navbar.ejs') %>
     <div class="container mt-4">
-      <form
-        enctype="multipart/form-data"
-        action="/requests/add"
-        method="POST"
-        id="form_data"
-      >
+      <form enctype="multipart/form-data" action="/requests/add" method="POST" id="form_data">
         <% if (work) { %>
-        <input type="hidden" name="work_uid" value="<%= work._id %>" />
-        <h5><%= work.title %></h5>
-        <% } %>
-        <div class="form-group">
-          <label>title</label>
-          <input
-            type="text"
-            class="form-control"
-            name="title"
-            autocomplete="off"
-          />
-        </div>
-        <div class="form-group">
-          <label>explain</label>
-          <textarea
-            class="form-control"
-            name="text"
-            id=""
-            cols="30"
-            rows="2"
-          ></textarea>
-        </div>
-        <div class="form-group">
-          <label>Department in charge</label>
-          <select class="form-control" name="to_department">
-            <option value="">Department</option>
-            <option value="A">A</option>
-            <option value="B">B</option>
-            <option value="C">C</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Due date</label>
-          <input type="date" class="form-control" name="due_date" />
-        </div>
-        <button type="button" class="btn btn-outline-primary" id="add_work">
-          Add request
-        </button>
-        <button
-          type="button"
-          class="btn btn-danger mx-3"
-          id="cancle"
-          onclick="history.back()"
-        >
-          Cancle
-        </button>
+          <input type="hidden" name="work_uid" value="<%= work._id %>" />
+          <h5>
+            <%= work.title %>
+          </h5>
+          <% } %>
+            <div class="form-group">
+              <label>title</label>
+              <input type="text" class="form-control" name="title" autocomplete="off" />
+            </div>
+            <div class="form-group">
+              <label>explain</label>
+              <textarea class="form-control" name="text" id="" cols="30" rows="2"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Department in charge</label>
+              <select class="form-control" name="to_department">
+                <option value="">Department</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Due date</label>
+              <input type="date" class="form-control" name="due_date" />
+            </div>
+            <button type="button" class="btn btn-outline-primary" id="add_work">
+              Add request
+            </button>
+            <button type="button" class="btn btn-danger mx-3" id="cancle" onclick="history.back()">
+              Cancle
+            </button>
       </form>
-      <div
-        class="error-message alert alert-danger my-4 d-none"
-        role="alert"
-      ></div>
+      <div class="error-message alert alert-danger my-4 d-none" role="alert"></div>
       <div class="message alert alert-primary d-none" role="alert"></div>
     </div>
 
@@ -103,5 +79,6 @@
           });
       });
     </script>
-  </body>
+</body>
+
 </html>

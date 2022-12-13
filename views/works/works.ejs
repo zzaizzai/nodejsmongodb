@@ -55,13 +55,17 @@
               </tr>
               <% for (var i =0; i < works.length; i++){ %>
               <tr>
-                <td ><h5><a style="color: black;" href="/works/<%= works[i]._id %>"><%= works[i].title %></a></h5></td>
+                <td>
+                  <h5>
+                    <a style="color: black" href="/works/<%= works[i]._id %>"
+                      ><%= works[i].title %></a
+                    >
+                  </h5>
+                </td>
                 <td><div><%= works[i].unserInfo.user_name %></div></td>
                 <td><div><%= works[i].due_date %></div></td>
                 <td>
-                  <div class="flex-grow-1">
-                    <%= works[i].create_datetime %>
-                  </div>
+                  <div class="flex-grow-1"><%= works[i].create_datetime %></div>
                 </td>
 
                 <!-- <div>uid: <%= works[i]._id %></div> -->

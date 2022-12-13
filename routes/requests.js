@@ -96,7 +96,7 @@ module.exports = function (app) {
 
             var status_msg = Service.status_request(result_req.create_datetime, result_req.due_date)
             if (result_req.is_done_datetime) {
-                status_msg.status = "Completed"
+                status_msg.status = "completed"
                 status_msg.status_msg = "Completed by .... days ago"
             }
 
@@ -190,6 +190,47 @@ module.exports = function (app) {
         })
     })
 
+
+
+    route.post('/end', (req, res) => {
+
+        const status = req.body.status;
+        const request_id = ObjectID(req.body.request_id) ?? ""
+        console.log(request_id)
+
+        const did_user_id = req.user?._id
+
+        if (did_user_id == undefined) {
+            res.send({ err: "please login" })
+            return
+        }
+
+        if (status == "completed") {
+            res.send({ err: "it is already completed" })
+            return
+        }
+
+        try {
+            app.db.collection("requests").updateMany({ _id: request_id },
+                {
+                    $set: {
+                        is_done_by_who: did_user_id,
+                        is_done_datetime: Service.datetime_now()
+                    }
+                })
+
+            res.send({ success: "good" })
+        }
+        catch {
+            res.send({ err: "something error" })
+        }
+
+
+
+
+
+
+    })
     route.post('/edit', (req, res) => {
         const data = req.body
         try {

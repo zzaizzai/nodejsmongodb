@@ -180,7 +180,13 @@ module.exports = function (app) {
         console.log(req.body)
         const data = req.body
         app.db.collection("works").updateOne({ _id: ObjectID(data.work_uid) },
-            { $set: { title: data.title, work_text: data.work_text, due_date: data.due_date } }, function (err, result) {
+            {
+                $set: {
+                    title: data.title,
+                    work_text: data.work_text,
+                    due_date: data.due_date
+                }
+            }, function (err, result) {
                 res.status(200).send({ message: "update done" })
             })
 

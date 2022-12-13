@@ -31,7 +31,7 @@ function status_request(create_datetime, due_date) {
     var days = Math.floor(difference / (1000 * 3600 * 24))
 
     if (days == 0) {
-        return { status_msg: "today Due date", status: "wait" }
+        return { status_msg: "Today Due date", status: "wait" }
     }
 
     if (time_due > time_now) {

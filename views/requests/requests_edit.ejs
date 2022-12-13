@@ -1,43 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
-      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
-      crossorigin="anonymous"
-    />
-    <title>Document</title>
-  </head>
-  <body>
-    <%- include('./../components/navbar.ejs') %>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous" />
+  <title>Document</title>
+</head>
+
+<body>
+  <%- include('./../components/navbar.ejs') %>
     <div class="container mt-4">
       <form action="/users/signup" method="POST" id="form_data">
-        <input type="hidden" value="<%= request._id %>" name="_id" />
+        <input type="hidden" value="<%= request._id %>" name="_id" id="work-id" />
         <div class="d-flex">
-          <h5><%= user.user_name %></h5>
+          <h5>
+            <%= user.user_name %>
+          </h5>
           <h5>(<%= user.department %>)</h5>
         </div>
         <div class="form-group">
           <label>Title</label>
-          <input
-            type="text"
-            class="form-control"
-            name="title"
-            value="<%= request.title %>"
-          />
+          <input type="text" class="form-control" name="title" value="<%= request.title %>" />
         </div>
         <div class="form-group">
           <label>Due</label>
-          <input
-            type="date"
-            class="form-control"
-            name="due_date"
-            value="<%= request.due_date %>"
-          />
+          <input type="date" class="form-control" name="due_date" value="<%= request.due_date %>" />
         </div>
 
         <div class="form-group">
@@ -47,20 +37,18 @@
             <option selected value="<%= request.to_department%>">
               Current: <%= request.to_department%>
             </option>
-            <% if (department_list) { for (var i = 0; i <
-            department_list.length; i++) { %>
-            <option value="<%=  department_list[i].name %>">
-              <%= department_list[i].name %>
-            </option>
-            <% }} %>
+            <% if (department_list) { for (var i=0; i < department_list.length; i++) { %>
+              <option value="<%=  department_list[i].name %>">
+                <%= department_list[i].name %>
+              </option>
+              <% }} %>
           </select>
         </div>
 
         <div class="form-group">
           <label>Text</label>
           <textarea class="form-control" name="text" rows="2">
-<%= request.text %></textarea
-          >
+<%= request.text %></textarea>
         </div>
 
         <button type="button" class="btn btn-outline-danger" id="edit">
@@ -68,43 +56,43 @@
         </button>
       </form>
       <div class="msg-box">
-        <div
-          class="error-message alert alert-danger my-4 d-none"
-          role="alert"
-        ></div>
+        <div class="error-message alert alert-danger my-4 d-none" role="alert"></div>
         <div class="message alert alert-primary d-none my-4" role="alert"></div>
       </div>
     </div>
-  </body>
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-  <script>
-    $("#edit").click(function () {
-      var data = $("#form_data").serialize();
-      $.ajax({
-        method: "POST",
-        url: "/requests/edit",
-        data: data,
-      }).done((result) => {
-        console.log(result);
-        if (result.message) {
-          $(".message").removeClass("d-none");
-          $(".message").text(result.message);
-          $(".error-message").addClass("d-none");
+</body>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+  $("#edit").click(function () {
+    var data = $("#form_data").serialize();
+    $.ajax({
+      method: "POST",
+      url: "/requests/edit",
+      data: data,
+    }).done((result) => {
+      console.log(result);
+      if (result.message) {
+        $(".message").removeClass("d-none");
+        $(".message").text(result.message);
+        $(".error-message").addClass("d-none");
 
-          setTimeout(() => {
-            $(".message").addClass("d-none");
-          }, 3000);
-        }
-        if (result.err) {
-          $(".error-message").removeClass("d-none");
+        location.href = `/requests/${$("#work-id").val()}`;
+
+        setTimeout(() => {
           $(".message").addClass("d-none");
-          $(".error-message").text(result.err);
+        }, 3000);
+      }
+      if (result.err) {
+        $(".error-message").removeClass("d-none");
+        $(".message").addClass("d-none");
+        $(".error-message").text(result.err);
 
-          setTimeout(() => {
-            $(".error-message").addClass("d-none");
-          }, 3000);
-        }
-      });
+        setTimeout(() => {
+          $(".error-message").addClass("d-none");
+        }, 3000);
+      }
     });
-  </script>
+  });
+</script>
+
 </html>
