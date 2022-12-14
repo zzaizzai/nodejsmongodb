@@ -5,27 +5,19 @@ module.exports = function (app) {
     const Service = require('./Service')
 
     route.get('/', (req, res) => {
-        var search = req.query.search
-        console.log(search)
-        if (search != undefined) {
+        var search = req.query?.search ?? ""
 
-
-        } else {
-            search = ""
-        }
-
-        console.log(search)
-        var sort = req.query.sort
-        console.log(sort)
 
         var condition = [
             {
                 $match:
                 {
-                    title: { $regex: search }
+                    $or: [{
+                        title: { $regex: search },
+                    }],
                 }
             },
-            { $sort: { create_datetime: -1 } },
+            { $sort: {create_datetime: -1 } },
             {
                 $lookup: {
                     from: "users",
@@ -38,9 +30,9 @@ module.exports = function (app) {
         ]
 
         app.db.collection("requests").aggregate(condition).sort({ create_datetime: -1 }).toArray((err, result) => {
-            console.log(result)
+            // console.log(result)
 
-            res.render('./requests/requests.ejs', { requests: result, search_text: search })
+            res.render('./requests/requests.ejs', { requests: result, search_text: search, sort: "" })
 
 
         })
@@ -95,16 +87,33 @@ module.exports = function (app) {
             ]
 
             var status_msg = Service.status_request(result_req.create_datetime, result_req.due_date)
+
+            var who_did_user_id = ""
             if (result_req.is_done_datetime) {
+
                 status_msg.status = "completed"
-                status_msg.status_msg = "Completed by .... days ago"
+
+                who_did_user_id = ObjectID(result_req.is_done_by_who)
+
             }
 
+            app.db.collection("users").findOne({ _id: who_did_user_id }, (err, result_who_did_user) => {
 
-            app.db.collection('comments').aggregate(pipeline_comments).toArray(function (err, result_comments) {
-                res.render('./requests/requests_detail.ejs',
-                    { request: result_req, comments: result_comments, status_msg: status_msg })
+                const who_did_user_name = result_who_did_user?.user_name
+
+                if (result_req.is_done_datetime) {
+                    status_msg.status_msg = `Completed by ${who_did_user_name} ${result_req?.create_datetime}`
+                }
+
+                app.db.collection('comments').aggregate(pipeline_comments).toArray(function (err, result_comments) {
+                    res.render('./requests/requests_detail.ejs',
+                        { request: result_req, comments: result_comments, status_msg: status_msg })
+                })
+
+
+
             })
+
         })
     })
 
@@ -121,11 +130,16 @@ module.exports = function (app) {
 
         app.db.collection("works").findOne({ _id: work_uid }, (err, result) => {
             console.log(result)
-            if (result) {
-                res.render('./requests/requests_add.ejs', { work: result })
-            } else {
+            if (!result) {
                 res.redirect('/requests')
+                return
+
             }
+            app.db.collection("departments").find().toArray((err, result_dep) => {
+                const departments = result_dep
+                res.render('./requests/requests_add.ejs', { work: result, departments: departments })
+            })
+
         })
 
 
@@ -164,6 +178,43 @@ module.exports = function (app) {
 
     })
 
+    // route.get('/:req_id/add_report', (req, res) => {
+
+    //     try {
+    //         var req_id = req.params.req_id;
+    //         req_id = ObjectID(req_id)
+
+    //         app.db.collection("requests").findOne({ _id: req_id }, (err, result) => {
+    //             console.log(result)
+    //             res.render('./requests/requests_add_report.ejs', { request: result })
+    //         })
+    //     }
+
+    //     catch {
+    //         res.redirect('/requests')
+    //     }
+
+
+
+    // })
+    // route.post('/add_report', (req, res) => {
+    //     var data = req.body
+
+
+    //     const work_uid = ObjectID(data.work_uid)
+    //     const req_uid = ObjectID(data.req_uid)
+
+    //     console.log(data)
+    //     for (var i = 0; i < data.method.length; i++) {
+    //         var method = data.method[i]
+    //         var condition = data.condition[i]
+    //         var value = data.value[i]
+
+    //         console.log(method, condition, value)
+    //     }
+
+    //     res.send("ddd")
+    // })
 
     route.post('/add', (req, res) => {
         console.log(req.body)
@@ -236,7 +287,6 @@ module.exports = function (app) {
         try {
             app.db.collection("requests").updateOne({ _id: ObjectID(data._id) },
                 {
-
                     $set: {
                         title: data.title,
                         due_date: data.due_date,

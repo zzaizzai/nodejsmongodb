@@ -35,9 +35,9 @@ function status_request(create_datetime, due_date) {
     }
 
     if (time_due > time_now) {
-        return { status_msg: `left ${days} day(s)`, status: "wait" }
+        return { status_msg: `Left ${days} day(s)`, status: "wait" }
     } else {
-        return { status_msg: `over ${days} day(s)`, status: "over" }
+        return { status_msg: `Over ${days} day(s)`, status: "over" }
     }
 
     return { status_msg: "" }

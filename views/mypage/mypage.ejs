@@ -55,9 +55,11 @@
       </button>
       <button id="logout" class="btn btn-danger mx-2">logout</button>
       <div class="my-5">
-        <h4>Works list</h4>
+        <!-- <h4>Works list</h4> -->
         <div class="my-works"></div>
       </div>
+
+      <button type="button" class="btn btn-primary">See My Works</button>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -71,16 +73,16 @@
         });
       });
 
-      $.ajax({
-        method: "get",
-        url: "/works/data/get_my_works_with_user_uid",
-      }).done((result) => {
-        console.log();
-        result.my_works.forEach((e) => {
-          console.log(e);
-          $(".my-works").append(`<div>${e.title}</div>`);
-        });
-      });
+      // $.ajax({
+      //   method: "get",
+      //   url: "/works/data/get_my_works_with_user_uid",
+      // }).done((result) => {
+      //   console.log();
+      //   result.my_works.forEach((e) => {
+      //     console.log(e);
+      //     $(".my-works").append(`<div>${e.title}</div>`);
+      //   });
+      // });
     </script>
 </body>
 

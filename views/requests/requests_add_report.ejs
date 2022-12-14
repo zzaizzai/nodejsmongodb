@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous" />
+    <title>Document</title>
+</head>
+
+<body>
+    <%- include('./../components/navbar.ejs') %>
+        <div class="container mt-4">
+            <form enctype="multipart/form-data" action="/requests/add" method="POST" id="form_data">
+                <% if (request) { %>
+                    <input type="text" name="req_uid" value="<%= request._id %>" />
+                    <input type="text" name="work_uid" value="<%= request.work_uid %>" />
+                    <h5>
+                        <%= request.title %>
+                    </h5>
+                    <% } %>
+                        <button type="button" id="add-row" class="btn btn-primary my-3">Add row</button>
+                        <button type="button" id="remove-row" class="btn btn-primary my-3">remove add</button>
+                        <form action="" name="form-data">
+                            <div >
+                                <table>
+                                    <tbody id="row-box">
+                                        <tr>
+                                            <td>
+                                                method
+                                            </td>
+                                            <td>
+                                                Condition
+                                            </td>
+                                            <td>
+                                                Value
+                                            </td>
+                                        </tr>
+                                        <tr class="index-0">
+                                            
+                                            <td>
+                                                <input type="text" name="method">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="condition">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="value">
+                                            </td>
+                                            
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
+                            <button type="button" class="btn btn-outline-primary" id="add_report">
+                                Add report
+                            </button>
+                            <button type="button" class="btn btn-danger mx-3" id="cancle" onclick="history.back()">
+                                Cancle
+                            </button>
+
+
+            </form>
+            <div class="error-message alert alert-danger my-4 d-none" role="alert"></div>
+            <div class="message alert alert-primary d-none" role="alert"></div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script>
+            var count = 0
+
+            $('#add-row').click(() => {
+                count = count + 1
+
+                $('#row-box').append(`  <tr class= "index-${count}">
+                                                <td>
+                                                    <input type="text" name="method">
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="condition">
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="value">
+                                                </td>
+                                            </tr>`)
+            })
+
+            $('#remove-row').click(() => {
+                $(`.index-${count}`).remove()
+                count -= 1
+            })
+            $("#add_report").click(function () {
+                var data = $("#form_data").serialize();
+                console.log(data)
+                $.ajax({
+                    url: "/requests/add_report",
+                    type: "post",
+                    data: data,
+                })
+                    .done(function (result) {
+                        console.log(result);
+                        if (result.error) {
+                            console.log("errr");
+                            $(".error-message").removeClass("d-none");
+                            $(".error-message").text(result.error);
+                        }
+
+                        if (result.message) {
+                            $(".message").removeClass("d-none");
+                            $(".message").text(result.message);
+                        }
+                    })
+                    .fail(function (err) {
+                        console.log(err);
+                    });
+            });
+        </script>
+</body>
+
+</html>

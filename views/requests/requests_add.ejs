@@ -31,10 +31,11 @@
             <div class="form-group">
               <label>Department in charge</label>
               <select class="form-control" name="to_department">
-                <option value="">Department</option>
-                <option value="A">A</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
+                <option value="<%= work.to_department  %>">Current: <%= work.to_department  %></option>
+                <% if (departments) {
+                  for (var i =0; i< departments.length; i ++ ) { %>
+                    <option value="<%= departments[i].name %>"><%= departments[i].name %></option>
+                <% }} %>
               </select>
             </div>
             <div class="form-group">
